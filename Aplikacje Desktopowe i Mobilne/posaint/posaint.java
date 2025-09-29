@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JColorChooser;
+import javax.swing.JFrame;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -31,25 +32,32 @@ public class posaint extends javax.swing.JFrame {
     Graphics2D graphics2DPrime;
     Graphics2D graphics2D;
     
-    public void save()
-    {
-        BufferedImage bImg = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D cg = bImg.createGraphics();
-        canvas.paintAll(cg);
+    public void save(){
+//        BufferedImage bImg = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+//        bImg = canvas.getCanvas()
+//        bImg.createGraphics();
+//        canvas.paintAll(cg);
+//        try {
+//            if (ImageIO.write(cg, "png", new File("./output_image.png")))
+//            {
+//                System.out.println("-- saved");
+//            }
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
         try {
-            if (ImageIO.write(bImg, "png", new File("./output_image.png")))
-            {
-                System.out.println("-- saved");
-            }
+            // retrieve image
+            BufferedImage bi = getMyImage(canvas);
+            File outputfile = new File("saved.png");
+            ImageIO.write(bi, "png", outputfile);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
     public posaint() {
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -361,7 +369,7 @@ public class posaint extends javax.swing.JFrame {
     }                                     
 
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {                                     
-        
+        save();
     }                                    
 
     /**
