@@ -1,12 +1,20 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -31,12 +39,26 @@ public class posaint extends javax.swing.JFrame {
     
     Graphics2D graphics2DPrime;
     Graphics2D graphics2D;
-    
-    public void save(){
-//        BufferedImage bImg = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-//        bImg = canvas.getCanvas()
+//    public static BufferedImage getScreenShot(Component canvas){
+//        BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+//        canvas.paint(image.getGraphics());
+//        return image;
+//    }
+    public void save() throws Exception{
+        try{
+            JComponent cnva = menu;
+            BufferedImage bImg = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+            canvas.printAll(bImg.getGraphics());
+            ImageIO.write(bImg, "jpg", new File("Obraz.jpg"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+//        BufferedImage img = getScreenShot(canvas);
+//        ImageIO.write(img, "png", new File (filename));   
+        
+        
 //        bImg.createGraphics();
-//        canvas.paintAll(cg);
 //        try {
 //            if (ImageIO.write(cg, "png", new File("./output_image.png")))
 //            {
@@ -46,14 +68,14 @@ public class posaint extends javax.swing.JFrame {
 //            // TODO Auto-generated catch block
 //            e.printStackTrace();
 //        }
-        try {
-            // retrieve image
-            BufferedImage bi = getMyImage(canvas);
-            File outputfile = new File("saved.png");
-            ImageIO.write(bi, "png", outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            // retrieve image
+//            BufferedImage bi = 
+//            File outputfile = new File("saved.png");
+//            ImageIO.write(bi, "png", outputfile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
     public posaint() {
         initComponents();
@@ -70,11 +92,11 @@ public class posaint extends javax.swing.JFrame {
         menu = new javax.swing.JPanel();
         brushSize = new javax.swing.JComboBox<>();
         tools = new javax.swing.JComboBox<>();
-        canvas = new javax.swing.JPanel();
         colorChooser = new javax.swing.JButton();
         pickedColor = new javax.swing.JPanel();
         clear = new javax.swing.JButton();
         save = new javax.swing.JButton();
+        canvas = new java.awt.Canvas();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,37 +110,6 @@ public class posaint extends javax.swing.JFrame {
                 toolsActionPerformed(evt);
             }
         });
-
-        canvas.setBackground(new java.awt.Color(255, 255, 255));
-        canvas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        canvas.setPreferredSize(new java.awt.Dimension(1000, 500));
-        canvas.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                canvasMouseDragged(evt);
-            }
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                canvasMouseMoved(evt);
-            }
-        });
-        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                canvasMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                canvasMousePressed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout canvasLayout = new javax.swing.GroupLayout(canvas);
-        canvas.setLayout(canvasLayout);
-        canvasLayout.setHorizontalGroup(
-            canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, Short.MAX_VALUE, Short.MAX_VALUE)
-        );
-        canvasLayout.setVerticalGroup(
-            canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 465, Short.MAX_VALUE)
-        );
 
         colorChooser.setText("Kolor");
         colorChooser.addActionListener(new java.awt.event.ActionListener() {
@@ -156,14 +147,34 @@ public class posaint extends javax.swing.JFrame {
             }
         });
 
+        canvas.setBackground(new java.awt.Color(255, 255, 255));
+        canvas.setPreferredSize(new java.awt.Dimension(1000, 500));
+        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canvasMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                canvasMousePressed(evt);
+            }
+        });
+        canvas.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                canvasMouseDragged(evt);
+            }
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                canvasMouseMoved(evt);
+            }
+        });
+
         javax.swing.GroupLayout menuLayout = new javax.swing.GroupLayout(menu);
         menu.setLayout(menuLayout);
         menuLayout.setHorizontalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
                 .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(canvas, javax.swing.GroupLayout.DEFAULT_SIZE, 1021, Short.MAX_VALUE)
                     .addGroup(menuLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(tools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)
                         .addComponent(brushSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -171,12 +182,11 @@ public class posaint extends javax.swing.JFrame {
                         .addComponent(colorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pickedColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(573, 573, 573)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(save)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clear))
-                    .addComponent(canvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+                        .addComponent(clear)
+                        .addContainerGap())))
         );
         menuLayout.setVerticalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,7 +203,7 @@ public class posaint extends javax.swing.JFrame {
                         .addComponent(clear)
                         .addComponent(save)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(canvas, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                .addComponent(canvas, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -201,7 +211,7 @@ public class posaint extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 1011, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,12 +232,43 @@ public class posaint extends javax.swing.JFrame {
         pickedColor.setBackground(brushColor);
     }                                            
 
-    private void canvasMousePressed(java.awt.event.MouseEvent evt) {                                    
-        old_mouse_x = evt.getX();
-        old_mouse_y = evt.getY();
-        first_poz_x = evt.getX();
-        first_poz_y = evt.getY();
-//        graphics2DPrime = (Graphics2D)canvas.getGraphics();
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        graphics2D = (Graphics2D)canvas.getGraphics();
+        if(graphics2D != null){
+            graphics2D.setColor(Color.WHITE);
+            graphics2D.fillRect(0, 0, 32767, 32767);
+            draw_figure = false;
+        }
+    }                                     
+
+    private void saveActionPerformed(java.awt.event.ActionEvent evt) {                                     
+        try {
+            save();
+        } catch (Exception ex) {
+            Logger.getLogger(posaint.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }                                    
+
+    private void canvasMouseClicked(java.awt.event.MouseEvent evt) {                                    
+        if (tools.getSelectedIndex()==4){
+            if(!draw_figure){
+                beninging_x = evt.getX();
+                beninging_y = evt.getY();
+                old_mouse_x = evt.getX();
+                old_mouse_y = evt.getY();
+                first_poz_x = evt.getX();
+                first_poz_y = evt.getY();
+                graphics2D = (Graphics2D)canvas.getGraphics();
+                draw_figure = true;
+            }else if(Math.abs(beninging_x-evt.getX())<5 && Math.abs(beninging_y-evt.getY())<5){
+                draw_figure = false;
+            }else{
+                old_mouse_x = evt.getX();
+                old_mouse_y = evt.getY();
+                first_poz_x = evt.getX();
+                first_poz_y = evt.getY();
+            }
+        }
     }                                   
 
     private void canvasMouseDragged(java.awt.event.MouseEvent evt) {                                    
@@ -321,28 +362,6 @@ public class posaint extends javax.swing.JFrame {
         }
     }                                   
 
-    private void canvasMouseClicked(java.awt.event.MouseEvent evt) {                                    
-        if (tools.getSelectedIndex()==4){
-            if(!draw_figure){
-                beninging_x = evt.getX();
-                beninging_y = evt.getY();
-                old_mouse_x = evt.getX();
-                old_mouse_y = evt.getY();
-                first_poz_x = evt.getX();
-                first_poz_y = evt.getY();
-                graphics2D = (Graphics2D)canvas.getGraphics();
-                draw_figure = true;
-            }else if(Math.abs(beninging_x-evt.getX())<5 && Math.abs(beninging_y-evt.getY())<5){
-                draw_figure = false;
-            }else{
-                old_mouse_x = evt.getX();
-                old_mouse_y = evt.getY();
-                first_poz_x = evt.getX();
-                first_poz_y = evt.getY();
-            }
-        }
-    }                                   
-
     private void canvasMouseMoved(java.awt.event.MouseEvent evt) {                                  
         if(draw_figure){
             if(tools.getSelectedIndex()==4){
@@ -359,18 +378,13 @@ public class posaint extends javax.swing.JFrame {
         }
     }                                 
 
-    private void clearActionPerformed(java.awt.event.ActionEvent evt) {                                      
-        graphics2D = (Graphics2D)canvas.getGraphics();
-        if(graphics2D != null){
-            graphics2D.setColor(Color.WHITE);
-            graphics2D.fillRect(0, 0, 32767, 32767);
-            draw_figure = false;
-        }
-    }                                     
-
-    private void saveActionPerformed(java.awt.event.ActionEvent evt) {                                     
-        save();
-    }                                    
+    private void canvasMousePressed(java.awt.event.MouseEvent evt) {                                    
+        old_mouse_x = evt.getX();
+        old_mouse_y = evt.getY();
+        first_poz_x = evt.getX();
+        first_poz_y = evt.getY();
+//        graphics2DPrime = (Graphics2D)canvas.getGraphics();
+    }                                   
 
     /**
      * @param args the command line arguments
@@ -409,7 +423,7 @@ public class posaint extends javax.swing.JFrame {
 
     // Variables declaration - do not modify                     
     private javax.swing.JComboBox<String> brushSize;
-    private javax.swing.JPanel canvas;
+    private java.awt.Canvas canvas;
     private javax.swing.JButton clear;
     private javax.swing.JButton colorChooser;
     private javax.swing.JPanel menu;
