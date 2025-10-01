@@ -5,10 +5,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -35,14 +39,23 @@ public class posaint extends javax.swing.JFrame {
     
     Graphics2D graphics2DPrime;
     Graphics2D graphics2D;
-    public static BufferedImage getScreenShot(Component canvas){
-        BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-        canvas.paint(image.getGraphics());
-        return image;
-    }
-    public void save(Component canvas, String filename) throws Exception{
-        BufferedImage img = getScreenShot(canvas);
-        ImageIO.write(img, "png", new File (filename));
+//    public static BufferedImage getScreenShot(Component canvas){
+//        BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+//        canvas.paint(image.getGraphics());
+//        return image;
+//    }
+    public void save() throws Exception{
+        try{
+            JComponent cnva = menu;
+            BufferedImage bImg = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+            canvas.printAll(bImg.getGraphics());
+            ImageIO.write(bImg, "jpg", new File("Obraz.jpg"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+//        BufferedImage img = getScreenShot(canvas);
+//        ImageIO.write(img, "png", new File (filename));   
         
         
 //        bImg.createGraphics();
@@ -229,7 +242,11 @@ public class posaint extends javax.swing.JFrame {
     }                                     
 
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {                                     
-        save();
+        try {
+            save();
+        } catch (Exception ex) {
+            Logger.getLogger(posaint.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }                                    
 
     private void canvasMouseClicked(java.awt.event.MouseEvent evt) {                                    
