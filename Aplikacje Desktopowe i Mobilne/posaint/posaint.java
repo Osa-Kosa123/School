@@ -265,7 +265,7 @@ public class posaint_canvas extends javax.swing.JFrame {
     }                                            
 
     private void saveAsActionPerformed(java.awt.event.ActionEvent evt) {                                       
-        save s = new save();
+        save s = new save(canvasImage);
         s.setVisible(true);
     }                                      
 
@@ -286,7 +286,9 @@ public class posaint_canvas extends javax.swing.JFrame {
                 canvas.canvasImage = img;        //ChatGPT what is wrong here
                 canvas.g2 = graphics2D;       //ChatGPT what is wrong here
                 canvas.setPreferredSize(new java.awt.Dimension(img.getWidth(), img.getHeight()));
-
+                canvas.setSize(img.getWidth(), img.getHeight());
+                canvasPanel.setPreferredSize(new java.awt.Dimension(img.getWidth(), img.getHeight()));
+                canvasPanel.setSize(img.getWidth(), img.getHeight());
            
                 canvas.revalidate();
                 canvas.repaint();
@@ -336,6 +338,7 @@ public class posaint_canvas extends javax.swing.JFrame {
                 draw_figure = true;
             }else if(Math.abs(beninging_x-evt.getX())<5 && Math.abs(beninging_y-evt.getY())<5){
                 draw_figure = false;
+                graphics2D.drawLine(evt.getX(), evt.getY(), beninging_x, beninging_y);
             }else{
                 old_mouse_x = evt.getX();
                 old_mouse_y = evt.getY();
