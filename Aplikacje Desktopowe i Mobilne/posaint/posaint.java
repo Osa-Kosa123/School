@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
@@ -29,19 +30,52 @@ public class posaint_canvas extends javax.swing.JFrame {
     public class CustomCanvas extends Canvas {
         public BufferedImage canvasImage;
         public Graphics2D g2;
-
+        public BufferedImage previewImage;
+        public Graphics2D gPreview;
+        
+        public CustomCanvas(int width, int height) {
+            canvasImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            g2 = canvasImage.createGraphics();
+            
+            previewImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            gPreview = previewImage.createGraphics();
+            
+            clear();
+        }
+        
+        public void clear() {
+            g2.setColor(Color.WHITE);
+            g2.fillRect(0, 0, canvasImage.getWidth(), canvasImage.getHeight());
+            repaint();
+        }
+        
+        public void clearPreview() {
+            gPreview.setComposite(java.awt.AlphaComposite.Clear);
+            gPreview.fillRect(0, 0, previewImage.getWidth(), previewImage.getHeight());
+            gPreview.setComposite(java.awt.AlphaComposite.SrcOver);
+        }
+        
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            if (canvasImage != null) {
-                g.drawImage(canvasImage, 0, 0, this);
-            }
+            g.drawImage(canvasImage, 0, 0, this);
+            g.drawImage(previewImage, 0, 0, this);
         }
     }
     
+    public void create(int width, int height){
+        canvasPanel.setPreferredSize(new java.awt.Dimension(width, height));
+        canvasPanel.setSize(width, height);
+        canvasPanel.revalidate();
+        canvas = new CustomCanvas(canvasPanel.getWidth(), canvasPanel.getHeight());
+        canvas.setPreferredSize(new java.awt.Dimension(width, height));
+        canvas.setSize(width, height);
+        canvas.revalidate();
+        canvas.clear();
+    }
+    
+    
     Color brushColor = Color.BLACK;
-    Graphics2D graphics2D;
-    Graphics2D graphics;
     boolean draw_figure = false;
     int beninging_x = 0;
     int beninging_y = 0;
@@ -54,21 +88,29 @@ public class posaint_canvas extends javax.swing.JFrame {
      */
     public posaint_canvas() {
         initComponents();
-        canvas = new CustomCanvas();
+        canvas = new CustomCanvas(canvasPanel.getWidth(), canvasPanel.getHeight());
         canvas.setSize(canvasPanel.getSize());
         canvas.setBackground(Color.WHITE);
         canvas.setFocusable(true);
 
-        // Add it to the JPanel placeholder
         canvasPanel.setLayout(new java.awt.BorderLayout());
         canvasPanel.add(canvas, java.awt.BorderLayout.CENTER);
         canvasPanel.revalidate();
         canvasPanel.repaint();
         
+        canvas.repaint();
+        canvas.g2.setColor(Color.WHITE);
+        canvas.g2.fillRect(0, 0, canvas.canvasImage.getWidth(), canvas.canvasImage.getHeight()); 
+        
         canvas.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 canvasMousePressed(evt);
+            }
+            
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                canvasMouseReleased(evt);
             }
 
             @Override
@@ -121,9 +163,7 @@ public class posaint_canvas extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Posaint");
         setBackground(new java.awt.Color(0, 0, 0));
-        setMaximumSize(new java.awt.Dimension(2137, 2137));
         setMinimumSize(new java.awt.Dimension(21, 21));
-        setPreferredSize(new java.awt.Dimension(512, 512));
         setSize(new java.awt.Dimension(512, 512));
 
         menu.setPreferredSize(new java.awt.Dimension(512, 36));
@@ -176,7 +216,7 @@ public class posaint_canvas extends javax.swing.JFrame {
         );
         canvasPanelLayout.setVerticalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
+            .addGap(0, 452, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout menuLayout = new javax.swing.GroupLayout(menu);
@@ -252,7 +292,7 @@ public class posaint_canvas extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
         );
 
         pack();
@@ -261,15 +301,15 @@ public class posaint_canvas extends javax.swing.JFrame {
     private void colorChooserActionPerformed(java.awt.event.ActionEvent evt) {                                             
         brushColor = JColorChooser.showDialog(null, "Wybierz kolor", brushColor);
         pickedColor.setBackground(brushColor);
-        canvas.setSize(1000, 1000);
     }                                            
 
     private void saveAsActionPerformed(java.awt.event.ActionEvent evt) {                                       
-        save s = new save(canvasImage);
+        save s = new save(canvas.canvasImage);
         s.setVisible(true);
     }                                      
 
-    private void useFileActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    private void useFileActionPerformed(java.awt.event.ActionEvent evt) {
+        JOptionPane.showMessageDialog(this, "*UWAGA - ta funkcja jest niedopracowana jednak wciąż w pwenym stopniu funkcjonalna");
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
 
@@ -279,50 +319,93 @@ public class posaint_canvas extends javax.swing.JFrame {
                 BufferedImage img = ImageIO.read(selectedFile);
 
                 canvasImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                graphics2D = canvasImage.createGraphics();
-                graphics2D.drawImage(img, 0, 0, null);
+                canvas.g2 = canvasImage.createGraphics();
+                canvas.repaint();
+                canvas.g2.drawImage(img, 0, 0, null);
 
             
-                canvas.canvasImage = img;        //ChatGPT what is wrong here
-                canvas.g2 = graphics2D;       //ChatGPT what is wrong here
-                canvas.setPreferredSize(new java.awt.Dimension(img.getWidth(), img.getHeight()));
-                canvas.setSize(img.getWidth(), img.getHeight());
-                canvasPanel.setPreferredSize(new java.awt.Dimension(img.getWidth(), img.getHeight()));
-                canvasPanel.setSize(img.getWidth(), img.getHeight());
-           
+                canvas.canvasImage = canvasImage; 
+                java.awt.Dimension newSize = new java.awt.Dimension(img.getWidth(), img.getHeight());
+                canvas.setPreferredSize(newSize);
+                canvas.setSize(newSize);
                 canvas.revalidate();
                 canvas.repaint();
 
+                canvasPanel.revalidate();
+                canvasPanel.repaint();
+                
+                
+                this.pack();
+                
                 java.awt.Component parent = canvas.getParent();
-                if (parent instanceof javax.swing.JViewport) {
-                    javax.swing.JViewport vp = (javax.swing.JViewport) parent;
+                if (parent instanceof javax.swing.JViewport vp) {
                     vp.setViewPosition(new java.awt.Point(0, 0));
                 }
-            }catch (Exception ex) {
-                ex.printStackTrace();
+            }catch (IOException ex) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Nie udało się wczytać obrazu!");
             }
         }
     }                                       
 
     private void clearActionPerformed(java.awt.event.ActionEvent evt) {                                      
-        graphics2D = (Graphics2D)canvas.getGraphics();
-        if(graphics2D != null){
-            graphics2D.setColor(Color.WHITE);
-            graphics2D.fillRect(0, 0, 32767, 32767);
-            draw_figure = false;
-        }
+        canvas.clear();
     }                                     
 
-    private void newCanvasActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
+    private void newCanvasActionPerformed(java.awt.event.ActionEvent evt) {  
+        new_canvas nc = new new_canvas();
+        nc.setVisible(true);
     }                                         
     
     private void canvasMousePressed(java.awt.event.MouseEvent evt){
-        old_mouse_x = evt.getX();
-        old_mouse_y = evt.getY();
-        first_poz_x = evt.getX();
-        first_poz_y = evt.getY();
+            if (tools.getSelectedIndex() != 4){
+            old_mouse_x = evt.getX();
+            old_mouse_y = evt.getY();
+            first_poz_x = evt.getX();
+            first_poz_y = evt.getY();
+        }
+    }
+    
+    private void canvasMouseReleased(java.awt.event.MouseEvent evt){
+        canvas.g2.setStroke(new BasicStroke(brushSize.getSelectedIndex() + 1));
+        canvas.g2.setColor(brushColor);
+
+        switch(tools.getSelectedIndex()){
+                case 1:
+                    if(first_poz_x>evt.getX()){
+                        if(first_poz_y>evt.getY()){
+                            canvas.g2.fillRect(evt.getX(), evt.getY(), first_poz_x-evt.getX(), first_poz_y-evt.getY());
+                        }else{
+                            canvas.g2.fillRect(evt.getX(), first_poz_y, first_poz_x-evt.getX(), evt.getY()-first_poz_y);
+                        }
+                    }else{
+                        if(first_poz_y>evt.getY()){
+                            canvas.g2.fillRect(first_poz_x, evt.getY(), evt.getX()-first_poz_x, first_poz_y-evt.getY());
+                        }else{
+                            canvas.g2.fillRect(first_poz_x, first_poz_y, evt.getX()-first_poz_x, evt.getY()-first_poz_y);
+                        }
+                    }
+                    break;
+                case 2:
+                    canvas.g2.drawLine(first_poz_x, first_poz_y, evt.getX(), evt.getY());
+                    break;
+                case 3:
+                    if(first_poz_x>evt.getX()){
+                        if(first_poz_y>evt.getY()){
+                            canvas.g2.fillOval(evt.getX(), evt.getY(), first_poz_x-evt.getX(), first_poz_y-evt.getY());
+                        }else{
+                            canvas.g2.fillOval(evt.getX(), first_poz_y, first_poz_x-evt.getX(), evt.getY()-first_poz_y);
+                        }
+                    }else{
+                        if(first_poz_y>evt.getY()){
+                            canvas.g2.fillOval(first_poz_x, evt.getY(), evt.getX()-first_poz_x, first_poz_y-evt.getY());
+                        }else{
+                            canvas.g2.fillOval(first_poz_x, first_poz_y, evt.getX()-first_poz_x, evt.getY()-first_poz_y);
+                        }
+                    }
+                    break;
+            }
+
+        canvas.repaint();
     }
     
     private void canvasMouseClicked(java.awt.event.MouseEvent evt){
@@ -330,128 +413,94 @@ public class posaint_canvas extends javax.swing.JFrame {
             if(!draw_figure){
                 beninging_x = evt.getX();
                 beninging_y = evt.getY();
-                old_mouse_x = evt.getX();
-                old_mouse_y = evt.getY();
                 first_poz_x = evt.getX();
                 first_poz_y = evt.getY();
-                graphics2D = (Graphics2D)canvas.getGraphics();
+                canvas.g2 = canvas.canvasImage.createGraphics();
+                canvas.repaint();
                 draw_figure = true;
             }else if(Math.abs(beninging_x-evt.getX())<5 && Math.abs(beninging_y-evt.getY())<5){
                 draw_figure = false;
-                graphics2D.drawLine(evt.getX(), evt.getY(), beninging_x, beninging_y);
+                canvas.g2.drawLine(first_poz_x, first_poz_y, beninging_x, beninging_y);
+                canvas.clearPreview();
+                canvas.repaint();
             }else{
-                old_mouse_x = evt.getX();
-                old_mouse_y = evt.getY();
-                first_poz_x = evt.getX();
-                first_poz_y = evt.getY();
+                System.out.println("click");
+                canvas.g2.setStroke(new BasicStroke(brushSize.getSelectedIndex() + 1));
+                canvas.g2.setColor(brushColor);
+                canvas.g2.drawLine(first_poz_x, first_poz_y, evt.getX(), evt.getY());
+                canvas.repaint();
+                if(true){
+                    first_poz_x = evt.getX();
+                    first_poz_y = evt.getY();
+                }
             }
         }
+        
     }
     
     private void canvasMouseDragged(java.awt.event.MouseEvent evt){
-        if(tools.getSelectedIndex()==0){
-            graphics2D = (Graphics2D)canvas.getGraphics();
-            if(graphics2D != null){
-                graphics2D.setColor(brushColor);
-                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                graphics2D.drawLine(old_mouse_x, old_mouse_y, evt.getX(), evt.getY());
-            }
+        if (tools.getSelectedIndex() == 0) {
+            canvas.g2.setColor(brushColor);
+            canvas.g2.setStroke(new BasicStroke(brushSize.getSelectedIndex() + 1));
+            canvas.g2.drawLine(old_mouse_x, old_mouse_y, evt.getX(), evt.getY());
             old_mouse_x = evt.getX();
             old_mouse_y = evt.getY();
+            canvas.repaint();
+            return;
         }
         if(tools.getSelectedIndex()>0){
-            graphics2D = (Graphics2D)canvas.getGraphics();
-            if(graphics2D != null){
-                switch(tools.getSelectedIndex()){
-                    case 1:
-                        if(first_poz_x>evt.getX()){
-                            if(first_poz_y>evt.getY()){
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillRect(old_mouse_x, old_mouse_y, first_poz_x-old_mouse_x, first_poz_y-old_mouse_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillRect(evt.getX(), evt.getY(), first_poz_x-evt.getX(), first_poz_y-evt.getY());
-                            }else{
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillRect(old_mouse_x, first_poz_y, first_poz_x-old_mouse_x, old_mouse_y-first_poz_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillRect(evt.getX(), first_poz_y, first_poz_x-evt.getX(), evt.getY()-first_poz_y);
-                            }
+            canvas.clearPreview();
+            
+            canvas.gPreview.setColor(brushColor);
+            canvas.gPreview.setStroke(new BasicStroke(brushSize.getSelectedIndex() + 1));
+            
+            switch(tools.getSelectedIndex()){
+                case 1:
+                    if(first_poz_x>evt.getX()){
+                        if(first_poz_y>evt.getY()){
+                            canvas.gPreview.fillRect(evt.getX(), evt.getY(), first_poz_x-evt.getX(), first_poz_y-evt.getY());
                         }else{
-                            if(first_poz_y>evt.getY()){
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillRect(first_poz_x, old_mouse_y, old_mouse_x-first_poz_x, first_poz_y-old_mouse_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillRect(first_poz_x, evt.getY(), evt.getX()-first_poz_x, first_poz_y-evt.getY());
-                            }else{
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillRect(first_poz_x, first_poz_y, old_mouse_x-first_poz_x, old_mouse_y-first_poz_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillRect(first_poz_x, first_poz_y, evt.getX()-first_poz_x, evt.getY()-first_poz_y);
-                            }
+                            canvas.gPreview.fillRect(evt.getX(), first_poz_y, first_poz_x-evt.getX(), evt.getY()-first_poz_y);
                         }
-                        break;
-                    case 2:
-                        graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                        graphics2D.setColor(Color.WHITE);
-                        graphics2D.drawLine(first_poz_x, first_poz_y, old_mouse_x, old_mouse_y);
-                        graphics2D.setColor(brushColor);
-                        graphics2D.drawLine(first_poz_x, first_poz_y, evt.getX(), evt.getY());
-                        break;
-                    case 3:
-                        if(first_poz_x>evt.getX()){
-                            if(first_poz_y>evt.getY()){
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillOval(old_mouse_x, old_mouse_y, first_poz_x-old_mouse_x, first_poz_y-old_mouse_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillOval(evt.getX(), evt.getY(), first_poz_x-evt.getX(), first_poz_y-evt.getY());
-                            }else{
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillOval(old_mouse_x, first_poz_y, first_poz_x-old_mouse_x, old_mouse_y-first_poz_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillOval(evt.getX(), first_poz_y, first_poz_x-evt.getX(), evt.getY()-first_poz_y);
-                            }
+                    }else{
+                        if(first_poz_y>evt.getY()){
+                            canvas.gPreview.fillRect(first_poz_x, evt.getY(), evt.getX()-first_poz_x, first_poz_y-evt.getY());
                         }else{
-                            if(first_poz_y>evt.getY()){
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillOval(first_poz_x, old_mouse_y, old_mouse_x-first_poz_x, first_poz_y-old_mouse_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillOval(first_poz_x, evt.getY(), evt.getX()-first_poz_x, first_poz_y-evt.getY());
-                            }else{
-                                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                                graphics2D.setColor(Color.WHITE);
-                                graphics2D.fillOval(first_poz_x, first_poz_y, old_mouse_x-first_poz_x, old_mouse_y-first_poz_y);
-                                graphics2D.setColor(brushColor);
-                                graphics2D.fillOval(first_poz_x, first_poz_y, evt.getX()-first_poz_x, evt.getY()-first_poz_y);
-                            }
+                            canvas.gPreview.fillRect(first_poz_x, first_poz_y, evt.getX()-first_poz_x, evt.getY()-first_poz_y);
                         }
-                        break;
-                }
+                    }
+                    break;
+                case 2:
+                    canvas.gPreview.drawLine(first_poz_x, first_poz_y, evt.getX(), evt.getY());
+                    break;
+                case 3:
+                    if(first_poz_x>evt.getX()){
+                        if(first_poz_y>evt.getY()){
+                            canvas.gPreview.fillOval(evt.getX(), evt.getY(), first_poz_x-evt.getX(), first_poz_y-evt.getY());
+                        }else{
+                            canvas.gPreview.fillOval(evt.getX(), first_poz_y, first_poz_x-evt.getX(), evt.getY()-first_poz_y);
+                        }
+                    }else{
+                        if(first_poz_y>evt.getY()){
+                            canvas.gPreview.fillOval(first_poz_x, evt.getY(), evt.getX()-first_poz_x, first_poz_y-evt.getY());
+                        }else{
+                            canvas.gPreview.fillOval(first_poz_x, first_poz_y, evt.getX()-first_poz_x, evt.getY()-first_poz_y);
+                        }
+                    }
+                    break;
             }
-            old_mouse_x = evt.getX();
-            old_mouse_y = evt.getY();
+            canvas.repaint();
         }
     }
     
     private void canvasMouseMoved(java.awt.event.MouseEvent evt){
-        if(draw_figure){
-            if(tools.getSelectedIndex()==4){
-                graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
-                graphics2D.setColor(Color.WHITE);
-                graphics2D.drawLine(first_poz_x, first_poz_y, old_mouse_x, old_mouse_y);
-                graphics2D.setColor(brushColor);
-                graphics2D.drawLine(first_poz_x, first_poz_y, evt.getX(), evt.getY());
-            }else{
-                draw_figure = false;
-            }
-            old_mouse_x = evt.getX();
-            old_mouse_y = evt.getY();
+        if(draw_figure && tools.getSelectedIndex()==4){
+            canvas.clearPreview();
+            
+            canvas.gPreview.setColor(brushColor);
+            canvas.gPreview.setStroke(new BasicStroke(brushSize.getSelectedIndex() + 1));
+            canvas.gPreview.drawLine(first_poz_x, first_poz_y, evt.getX(), evt.getY());
+            canvas.repaint();
         }
     }
     
@@ -480,6 +529,8 @@ public class posaint_canvas extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(posaint_canvas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
