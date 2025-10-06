@@ -1,20 +1,17 @@
+
 import java.awt.BasicStroke;
+import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -23,63 +20,78 @@ import javax.swing.JLabel;
 
 /**
  *
- * @author Admin
+ * @author Oskar
  */
-public class posaint extends javax.swing.JFrame {
+public class posaint_canvas extends javax.swing.JFrame {
+    
+    private CustomCanvas canvas;
+    
+    public class CustomCanvas extends Canvas {
+        public BufferedImage canvasImage;
+        public Graphics2D g2;
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            if (canvasImage != null) {
+                g.drawImage(canvasImage, 0, 0, this);
+            }
+        }
+    }
     
     Color brushColor = Color.BLACK;
-    
+    Graphics2D graphics2D;
+    Graphics2D graphics;
     boolean draw_figure = false;
+    int beninging_x = 0;
+    int beninging_y = 0;
     int old_mouse_x = 0;
     int old_mouse_y = 0;
     int first_poz_x = 0;
     int first_poz_y = 0;
-    int beninging_x = 0;
-    int beninging_y = 0;
-    
-    Graphics2D graphics2DPrime;
-    Graphics2D graphics2D;
-//    public static BufferedImage getScreenShot(Component canvas){
-//        BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-//        canvas.paint(image.getGraphics());
-//        return image;
-//    }
-    public void save() throws Exception{
-        try{
-            JComponent cnva = menu;
-            BufferedImage bImg = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
-            canvas.printAll(bImg.getGraphics());
-            ImageIO.write(bImg, "jpg", new File("Obraz.jpg"));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        
-//        BufferedImage img = getScreenShot(canvas);
-//        ImageIO.write(img, "png", new File (filename));   
-        
-        
-//        bImg.createGraphics();
-//        try {
-//            if (ImageIO.write(cg, "png", new File("./output_image.png")))
-//            {
-//                System.out.println("-- saved");
-//            }
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        try {
-//            // retrieve image
-//            BufferedImage bi = 
-//            File outputfile = new File("saved.png");
-//            ImageIO.write(bi, "png", outputfile);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
-    public posaint() {
+    /**
+     * Creates new form posaint
+     */
+    public posaint_canvas() {
         initComponents();
+        canvas = new CustomCanvas();
+        canvas.setSize(canvasPanel.getSize());
+        canvas.setBackground(Color.WHITE);
+        canvas.setFocusable(true);
+
+        // Add it to the JPanel placeholder
+        canvasPanel.setLayout(new java.awt.BorderLayout());
+        canvasPanel.add(canvas, java.awt.BorderLayout.CENTER);
+        canvasPanel.revalidate();
+        canvasPanel.repaint();
+        
+        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                canvasMousePressed(evt);
+            }
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canvasMouseClicked(evt);
+            }
+        });
+
+        canvas.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                canvasMouseDragged(evt);
+            }
+
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                canvasMouseMoved(evt);
+            }
+        });
     }
+    
+    private BufferedImage canvasImage;
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -89,29 +101,43 @@ public class posaint extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         menu = new javax.swing.JPanel();
-        brushSize = new javax.swing.JComboBox<>();
         tools = new javax.swing.JComboBox<>();
+        brushSize = new javax.swing.JComboBox<>();
         colorChooser = new javax.swing.JButton();
         pickedColor = new javax.swing.JPanel();
         clear = new javax.swing.JButton();
-        save = new javax.swing.JButton();
-        canvas = new java.awt.Canvas();
+        canvasPanel = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        file = new javax.swing.JMenu();
+        newCanvas = new javax.swing.JMenuItem();
+        saveAs = new javax.swing.JMenuItem();
+        useFile = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Posaint");
+        setBackground(new java.awt.Color(0, 0, 0));
+        setMaximumSize(new java.awt.Dimension(2137, 2137));
+        setMinimumSize(new java.awt.Dimension(21, 21));
+        setPreferredSize(new java.awt.Dimension(512, 512));
+        setSize(new java.awt.Dimension(512, 512));
 
-        menu.setPreferredSize(new java.awt.Dimension(1000, 500));
-
-        brushSize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 px", "2 px", "3 px", "4 px", "5 px" }));
+        menu.setPreferredSize(new java.awt.Dimension(512, 36));
 
         tools.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ołówek", "Prostokąt", "Linia", "Okrąg", "Wielokąt" }));
-        tools.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toolsActionPerformed(evt);
-            }
-        });
+        tools.setPreferredSize(new java.awt.Dimension(96, 24));
+
+        brushSize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 px", "2 px", "3 px", "4 px", "5 px" }));
+        brushSize.setMinimumSize(new java.awt.Dimension(48, 22));
+        brushSize.setPreferredSize(new java.awt.Dimension(72, 24));
 
         colorChooser.setText("Kolor");
+        colorChooser.setMaximumSize(new java.awt.Dimension(2, 25));
+        colorChooser.setPreferredSize(new java.awt.Dimension(72, 24));
         colorChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colorChooserActionPerformed(evt);
@@ -119,118 +145,163 @@ public class posaint extends javax.swing.JFrame {
         });
 
         pickedColor.setBackground(new java.awt.Color(0, 0, 0));
-        pickedColor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pickedColor.setPreferredSize(new java.awt.Dimension(24, 24));
 
         javax.swing.GroupLayout pickedColorLayout = new javax.swing.GroupLayout(pickedColor);
         pickedColor.setLayout(pickedColorLayout);
         pickedColorLayout.setHorizontalGroup(
             pickedColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 23, Short.MAX_VALUE)
+            .addGap(0, 24, Short.MAX_VALUE)
         );
         pickedColorLayout.setVerticalGroup(
             pickedColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 24, Short.MAX_VALUE)
         );
 
         clear.setText("Wyczyść");
+        clear.setMaximumSize(new java.awt.Dimension(75, 25));
+        clear.setMinimumSize(new java.awt.Dimension(33, 23));
+        clear.setPreferredSize(new java.awt.Dimension(96, 24));
         clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearActionPerformed(evt);
             }
         });
 
-        save.setText("Zapisz");
-        save.setToolTipText("");
-        save.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveActionPerformed(evt);
-            }
-        });
-
-        canvas.setBackground(new java.awt.Color(255, 255, 255));
-        canvas.setPreferredSize(new java.awt.Dimension(1000, 500));
-        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                canvasMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                canvasMousePressed(evt);
-            }
-        });
-        canvas.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                canvasMouseDragged(evt);
-            }
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                canvasMouseMoved(evt);
-            }
-        });
+        javax.swing.GroupLayout canvasPanelLayout = new javax.swing.GroupLayout(canvasPanel);
+        canvasPanel.setLayout(canvasPanelLayout);
+        canvasPanelLayout.setHorizontalGroup(
+            canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        canvasPanelLayout.setVerticalGroup(
+            canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 475, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout menuLayout = new javax.swing.GroupLayout(menu);
         menu.setLayout(menuLayout);
         menuLayout.setHorizontalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(canvas, javax.swing.GroupLayout.DEFAULT_SIZE, 1021, Short.MAX_VALUE)
-                    .addGroup(menuLayout.createSequentialGroup()
-                        .addComponent(tools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)
-                        .addComponent(brushSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(colorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pickedColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(save)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clear)
-                        .addContainerGap())))
+                .addContainerGap()
+                .addComponent(tools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(brushSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(colorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pickedColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
+                .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(canvasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         menuLayout.setVerticalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(brushSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorChooser))
-                        .addComponent(pickedColor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(clear)
-                        .addComponent(save)))
+                        .addComponent(tools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(brushSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(colorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pickedColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(canvas, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(canvasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        file.setText("Plik");
+
+        newCanvas.setText("Nowe płutno");
+        newCanvas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newCanvasActionPerformed(evt);
+            }
+        });
+        file.add(newCanvas);
+
+        saveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        saveAs.setText("Zapisz jako");
+        saveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsActionPerformed(evt);
+            }
+        });
+        file.add(saveAs);
+
+        useFile.setText("Wczytaj");
+        useFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useFileActionPerformed(evt);
+            }
+        });
+        file.add(useFile);
+
+        jMenuBar1.add(file);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 1011, Short.MAX_VALUE)
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>                        
 
-    private void toolsActionPerformed(java.awt.event.ActionEvent evt) {                                      
-        // TODO add your handling code here:
-    }                                     
-
     private void colorChooserActionPerformed(java.awt.event.ActionEvent evt) {                                             
         brushColor = JColorChooser.showDialog(null, "Wybierz kolor", brushColor);
         pickedColor.setBackground(brushColor);
+        canvas.setSize(1000, 1000);
     }                                            
+
+    private void saveAsActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        save s = new save();
+        s.setVisible(true);
+    }                                      
+
+    private void useFileActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                BufferedImage img = ImageIO.read(selectedFile);
+
+                canvasImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                graphics2D = canvasImage.createGraphics();
+                graphics2D.drawImage(img, 0, 0, null);
+
+            
+                canvas.canvasImage = img;        //ChatGPT what is wrong here
+                canvas.g2 = graphics2D;       //ChatGPT what is wrong here
+                canvas.setPreferredSize(new java.awt.Dimension(img.getWidth(), img.getHeight()));
+
+           
+                canvas.revalidate();
+                canvas.repaint();
+
+                java.awt.Component parent = canvas.getParent();
+                if (parent instanceof javax.swing.JViewport) {
+                    javax.swing.JViewport vp = (javax.swing.JViewport) parent;
+                    vp.setViewPosition(new java.awt.Point(0, 0));
+                }
+            }catch (Exception ex) {
+                ex.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, "Nie udało się wczytać obrazu!");
+            }
+        }
+    }                                       
 
     private void clearActionPerformed(java.awt.event.ActionEvent evt) {                                      
         graphics2D = (Graphics2D)canvas.getGraphics();
@@ -241,15 +312,18 @@ public class posaint extends javax.swing.JFrame {
         }
     }                                     
 
-    private void saveActionPerformed(java.awt.event.ActionEvent evt) {                                     
-        try {
-            save();
-        } catch (Exception ex) {
-            Logger.getLogger(posaint.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }                                    
-
-    private void canvasMouseClicked(java.awt.event.MouseEvent evt) {                                    
+    private void newCanvasActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+    
+    private void canvasMousePressed(java.awt.event.MouseEvent evt){
+        old_mouse_x = evt.getX();
+        old_mouse_y = evt.getY();
+        first_poz_x = evt.getX();
+        first_poz_y = evt.getY();
+    }
+    
+    private void canvasMouseClicked(java.awt.event.MouseEvent evt){
         if (tools.getSelectedIndex()==4){
             if(!draw_figure){
                 beninging_x = evt.getX();
@@ -269,9 +343,9 @@ public class posaint extends javax.swing.JFrame {
                 first_poz_y = evt.getY();
             }
         }
-    }                                   
-
-    private void canvasMouseDragged(java.awt.event.MouseEvent evt) {                                    
+    }
+    
+    private void canvasMouseDragged(java.awt.event.MouseEvent evt){
         if(tools.getSelectedIndex()==0){
             graphics2D = (Graphics2D)canvas.getGraphics();
             if(graphics2D != null){
@@ -360,9 +434,9 @@ public class posaint extends javax.swing.JFrame {
             old_mouse_x = evt.getX();
             old_mouse_y = evt.getY();
         }
-    }                                   
-
-    private void canvasMouseMoved(java.awt.event.MouseEvent evt) {                                  
+    }
+    
+    private void canvasMouseMoved(java.awt.event.MouseEvent evt){
         if(draw_figure){
             if(tools.getSelectedIndex()==4){
                 graphics2D.setStroke(new BasicStroke(brushSize.getSelectedIndex()+1));
@@ -376,16 +450,8 @@ public class posaint extends javax.swing.JFrame {
             old_mouse_x = evt.getX();
             old_mouse_y = evt.getY();
         }
-    }                                 
-
-    private void canvasMousePressed(java.awt.event.MouseEvent evt) {                                    
-        old_mouse_x = evt.getX();
-        old_mouse_y = evt.getY();
-        first_poz_x = evt.getX();
-        first_poz_y = evt.getY();
-//        graphics2DPrime = (Graphics2D)canvas.getGraphics();
-    }                                   
-
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -403,32 +469,39 @@ public class posaint extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(posaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(posaint_canvas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(posaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(posaint_canvas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(posaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(posaint_canvas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(posaint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(posaint_canvas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new posaint().setVisible(true);
+                new posaint_canvas().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify                     
     private javax.swing.JComboBox<String> brushSize;
-    private java.awt.Canvas canvas;
+    private javax.swing.JPanel canvasPanel;
     private javax.swing.JButton clear;
     private javax.swing.JButton colorChooser;
+    private javax.swing.JMenu file;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JPanel menu;
+    private javax.swing.JMenuItem newCanvas;
     private javax.swing.JPanel pickedColor;
-    private javax.swing.JButton save;
+    private javax.swing.JMenuItem saveAs;
     private javax.swing.JComboBox<String> tools;
+    private javax.swing.JMenuItem useFile;
     // End of variables declaration                   
 }
