@@ -25,9 +25,6 @@ public class save extends javax.swing.JFrame {
         initComponents();
         this.canvasImage = null; 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        setSize(400, 250);        
-        setLocationRelativeTo(null); 
     }
     private java.awt.image.BufferedImage canvasImage;
     public save(java.awt.image.BufferedImage img) {
@@ -52,6 +49,7 @@ public class save extends javax.swing.JFrame {
         save = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         chooseSaveLocation.setText("Wybież lokalizację zapisania pliku");
         chooseSaveLocation.addActionListener(new java.awt.event.ActionListener() {
@@ -60,6 +58,7 @@ public class save extends javax.swing.JFrame {
             }
         });
 
+        saveLocation.setEditable(false);
         saveLocation.setText("...");
 
         name.setText("plik");
@@ -119,7 +118,7 @@ public class save extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(save))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -136,7 +135,7 @@ public class save extends javax.swing.JFrame {
 
     private void chooseSaveLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseSaveLocationActionPerformed
         saveDirecttory.setCurrentDirectory(new java.io.File("."));
-        saveDirecttory.setDialogTitle("Zapisz jako");
+        saveDirecttory.setDialogTitle("");
         saveDirecttory.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         saveDirecttory.setAcceptAllFileFilterUsed(false);
         if (saveDirecttory.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
@@ -151,10 +150,10 @@ public class save extends javax.swing.JFrame {
             fileName = "plik";
         }
         try {
-            ImageIO.write(canvasImage, "png", new File("./"+fileName+".png"));
+            ImageIO.write(canvasImage, "png", new File(directory+"/"+fileName+".png"));
         }catch (IOException ex) {
             ex.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this, "Nie udało się wczytać obrazu!");
+            javax.swing.JOptionPane.showMessageDialog(this, "Wystąpił błąd z zapisywaniem!");
         }
         this.dispose();
     }//GEN-LAST:event_saveActionPerformed
