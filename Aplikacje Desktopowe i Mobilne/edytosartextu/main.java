@@ -1,3 +1,7 @@
+
+import java.awt.Color;
+import javax.swing.JColorChooser;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -9,6 +13,8 @@
  */
 public class main extends javax.swing.JFrame {
 
+    Color textC = Color.BLACK;
+    Color bgC = Color.WHITE;
     /**
      * Creates new form main
      */
@@ -31,15 +37,15 @@ public class main extends javax.swing.JFrame {
         italic = new javax.swing.JToggleButton();
         charCount = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        tc = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        bc = new javax.swing.JPanel();
         paste = new javax.swing.JButton();
         cut = new javax.swing.JButton();
         copy = new javax.swing.JButton();
         anl = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        Area = new javax.swing.JTextArea();
+        textColor = new javax.swing.JButton();
+        bgColor = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         open = new javax.swing.JMenuItem();
@@ -47,10 +53,10 @@ public class main extends javax.swing.JFrame {
         end = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1024, 512));
 
         font.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
-        font.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        font.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Algerian", "Arial", "Arial Black", "Arial Narrow", "Arial Unicode MS", "Bookshelf Script MT", "Calibri", "Calibri Light", "Chiller", "Freestyle Script", "Harlow Solid Italic", "HoloLens MDL2 Assets", "Jokerman", "Kunstler Script", "Mistral", "Old English Text MT", "Parchment", "SanrSerif", "Segoe UI", "Tahoma", "Tempus Sans ITC", "Times New Roman" }));
+        font.setPreferredSize(new java.awt.Dimension(131, 22));
 
         size.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         size.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "3", "5", "8", "10", "12", "14", "18", "24", "36", "48" }));
@@ -77,40 +83,10 @@ public class main extends javax.swing.JFrame {
         jLabel1.setMinimumSize(new java.awt.Dimension(10, 14));
         jLabel1.setPreferredSize(new java.awt.Dimension(64, 22));
 
-        tc.setBackground(new java.awt.Color(0, 0, 0));
-        tc.setMinimumSize(new java.awt.Dimension(10, 10));
-        tc.setPreferredSize(new java.awt.Dimension(22, 22));
-
-        javax.swing.GroupLayout tcLayout = new javax.swing.GroupLayout(tc);
-        tc.setLayout(tcLayout);
-        tcLayout.setHorizontalGroup(
-            tcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-        );
-        tcLayout.setVerticalGroup(
-            tcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-        );
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel2.setText("Kolor tła:");
         jLabel2.setMaximumSize(new java.awt.Dimension(47, 23));
         jLabel2.setPreferredSize(new java.awt.Dimension(40, 22));
-
-        bc.setBackground(new java.awt.Color(255, 255, 255));
-        bc.setMinimumSize(new java.awt.Dimension(10, 10));
-        bc.setPreferredSize(new java.awt.Dimension(22, 22));
-
-        javax.swing.GroupLayout bcLayout = new javax.swing.GroupLayout(bc);
-        bc.setLayout(bcLayout);
-        bcLayout.setHorizontalGroup(
-            bcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-        );
-        bcLayout.setVerticalGroup(
-            bcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-        );
 
         paste.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         paste.setText("Wklej");
@@ -132,9 +108,31 @@ public class main extends javax.swing.JFrame {
         anl.setMaximumSize(new java.awt.Dimension(75, 21));
         anl.setPreferredSize(new java.awt.Dimension(75, 22));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        Area.setColumns(20);
+        Area.setRows(5);
+        jScrollPane1.setViewportView(Area);
+
+        textColor.setBackground(new java.awt.Color(0, 0, 0));
+        textColor.setToolTipText("");
+        textColor.setMaximumSize(new java.awt.Dimension(72, 70));
+        textColor.setMinimumSize(new java.awt.Dimension(7, 7));
+        textColor.setPreferredSize(new java.awt.Dimension(22, 22));
+        textColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textColorActionPerformed(evt);
+            }
+        });
+
+        bgColor.setForeground(new java.awt.Color(255, 255, 255));
+        bgColor.setToolTipText("");
+        bgColor.setMaximumSize(new java.awt.Dimension(72, 70));
+        bgColor.setMinimumSize(new java.awt.Dimension(7, 7));
+        bgColor.setPreferredSize(new java.awt.Dimension(22, 22));
+        bgColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bgColorActionPerformed(evt);
+            }
+        });
 
         file.setText("Plik");
 
@@ -173,12 +171,12 @@ public class main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 397, Short.MAX_VALUE)
+                        .addComponent(bgColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 338, Short.MAX_VALUE)
                         .addComponent(anl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(copy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -196,20 +194,21 @@ public class main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(font, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(bold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(italic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(paste, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(copy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(anl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(font, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(italic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(paste, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(copy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(anl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bgColor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -219,6 +218,18 @@ public class main extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void textColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textColorActionPerformed
+        textC = JColorChooser.showDialog(null, "Wybierz kolor", textC);
+        textColor.setBackground(textC);
+        Area.setForeground(textC);
+    }//GEN-LAST:event_textColorActionPerformed
+
+    private void bgColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bgColorActionPerformed
+        bgC = JColorChooser.showDialog(null, "Wybierz kolor", bgC);
+        bgColor.setBackground(bgC);
+        Area.setBackground(bgC);
+    }//GEN-LAST:event_bgColorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -256,8 +267,9 @@ public class main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea Area;
     private javax.swing.JCheckBox anl;
-    private javax.swing.JPanel bc;
+    private javax.swing.JButton bgColor;
     private javax.swing.JToggleButton bold;
     private javax.swing.JLabel charCount;
     private javax.swing.JButton copy;
@@ -270,11 +282,10 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenuItem open;
     private javax.swing.JButton paste;
     private javax.swing.JMenuItem save;
     private javax.swing.JComboBox<String> size;
-    private javax.swing.JPanel tc;
+    private javax.swing.JButton textColor;
     // End of variables declaration//GEN-END:variables
 }
