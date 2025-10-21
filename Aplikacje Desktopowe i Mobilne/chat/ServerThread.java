@@ -15,7 +15,7 @@ import java.util.Vector;
  * @author Admin
  */
 public class ServerThread {
-    Vector v;
+    static Vector v;
     InputStream in;
     OutputStream out;
     
@@ -30,10 +30,12 @@ public class ServerThread {
 	}
     }
 
-    static void start(Socket s) {
-        static Vector vt = v;
-        for(int i=0; i++; i<v.size()){
-            if(v.get(i).getPort())
+    static void start(Socket s)throws Exception{
+        for(int i=0; i<v.size(); i++){
+            Socket vs = v.get(i).socket;
+            if(vs.getPort() != s.getPort()){
+                v.get(i)
+            }
         }
     }
 }
