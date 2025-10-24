@@ -1,4 +1,4 @@
-//tutaj klient komunikuje się z serwerem
+//tutaj indywidualny wątek klienta
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,4 +47,5 @@ public class ClientThread extends Thread {
 	}
 	
 }
+
 
