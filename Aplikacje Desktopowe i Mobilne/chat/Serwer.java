@@ -12,7 +12,7 @@ public class Serwer {
 			ServerSocket s = new ServerSocket(2011);
 			System.out.println("Serwer Run...");
 			ServerThread sThread = new ServerThread(v);
-                        
+                         
 			while(true){
 				Socket incoming = s.accept();
 				
@@ -20,7 +20,7 @@ public class Serwer {
                                 v.addElement(cThread);
 				
 			}
-			//s.close();
+//			s.close();
 			
 			
 		}catch(IOException e){
@@ -28,3 +28,4 @@ public class Serwer {
 		}
 	}
 }
+// TODO EVERYTHING
