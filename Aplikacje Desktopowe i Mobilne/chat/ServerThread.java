@@ -1,3 +1,7 @@
+//tutaj serwer przydziela wiadomości do użytkowników (chyba)
+
+
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,3 +43,4 @@ public class ServerThread {
         }
     }
 }
+
