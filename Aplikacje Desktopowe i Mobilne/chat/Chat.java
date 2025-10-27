@@ -18,9 +18,9 @@ import java.util.logging.Logger;
  */
 public class Chat extends javax.swing.JFrame {
 
-    InputStream inStream;
-    OutputStream outStream;
-    Socket socket;
+    static InputStream inStream;
+    static OutputStream outStream;
+    static Socket socket;
     /**
      * Creates new form Chat
      */
@@ -101,8 +101,8 @@ public class Chat extends javax.swing.JFrame {
         });
 
         message.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                enterKeyPressed(evt);
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                enterKeyTyped(evt);
             }
         });
 
@@ -204,22 +204,23 @@ public class Chat extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sendActionPerformed
 
-    private void enterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_enterKeyPressed
+    private void enterKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterKeyTyped
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER)
+            message.setText("yes");
+        else{
+            System.out.println(": " + evt.getKeyCode());
+        }
+    }//GEN-LAST:event_enterKeyTyped
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         try{
-            BufferedReader keyboardStream = new BufferedReader(new InputStreamReader(System.in));
-            Socket socket = new Socket("localhost", 2011);
+            socket = new Socket("localhost", 2011);
             
-            InputStream inStream = socket.getInputStream();
-            OutputStream outStream = socket.getOutputStream();
-			
-            boolean done = false;
+            inStream = socket.getInputStream();
+            outStream = socket.getOutputStream();
             
             Thread readerThread = new Thread(() -> {
                 try (BufferedReader serverIn = new BufferedReader(new InputStreamReader(inStream))) {
