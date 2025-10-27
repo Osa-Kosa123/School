@@ -1,8 +1,3 @@
-//tutaj serwer przydziela wiadomości do użytkowników (chyba)
-
-
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,28 +13,43 @@ import java.util.Vector;
  *
  * @author Admin
  */
-public class ServerThread {
-    static Vector v;
-    InputStream in;
-    OutputStream out;
+public class ServerThread extends Thread {
+    static Vector<ClientThread> v;
     
-    ServerThread(Vector tv)throws IOException{
+    ServerThread(Vector<ClientThread> tv) throws IOException {
         v = tv;
     }
-    public void run(){
-	try{
-            int i = 1;
-	}catch(Exception e){
-            int i = 0;
-	}
+    
+    public void run() {
+        try {
+            while(true) {
+                Thread.sleep(100); // Prevent CPU intensive loop
+            }
+        } catch(Exception e) {
+            System.out.println("ServerThread error: " + e);
+        }
     }
 
-    static void start(Socket s)throws Exception{
-        for(int i=0; i<v.size(); i++){
-            Socket vs = v.get(i).socket;
-            if(vs.getPort() != s.getPort()){
-                v.get(i)
+    static void join(Socket s) throws Exception {
+        for(int i = 0; i < v.size(); i++){
+            ClientThread client = v.get(i);
+            client.out.write(("♦ "+s.getPort() + " has joined the chat\n").getBytes());
+        }
+    }
+    
+    static void message(Socket s, String message) throws Exception {
+        for(int i = 0; i < v.size(); i++){
+            ClientThread client = v.get(i);
+            if(client.socket.getPort() != s.getPort()) {
+                client.out.write((s.getPort() + ": " + message + "\n").getBytes());
             }
+        }
+    }
+    
+    static void leave(Socket s) throws Exception {
+        for(int i = 0; i < v.size(); i++){
+            ClientThread client = v.get(i);
+            client.out.write(("♦ "+s.getPort() + " has left the chat\n").getBytes());
         }
     }
 }

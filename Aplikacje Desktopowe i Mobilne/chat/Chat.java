@@ -1,13 +1,11 @@
-//to narazie zignorój, będzie potrzebne później
-
-
-
-
-
-
-
-
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -20,6 +18,9 @@
  */
 public class Chat extends javax.swing.JFrame {
 
+    InputStream inStream;
+    OutputStream outStream;
+    Socket socket;
     /**
      * Creates new form Chat
      */
@@ -93,6 +94,17 @@ public class Chat extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(232, 232, 232));
 
         send.setText("Wyślij");
+        send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendActionPerformed(evt);
+            }
+        });
+
+        message.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                enterKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -120,6 +132,11 @@ public class Chat extends javax.swing.JFrame {
         quit.setText("Opuść");
         quit.setMaximumSize(new java.awt.Dimension(96, 23));
         quit.setPreferredSize(new java.awt.Dimension(96, 23));
+        quit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -167,10 +184,57 @@ public class Chat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void quitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitActionPerformed
+        try {
+            inStream.close();
+            outStream.close();
+            socket.close();
+            this.dispose();
+        } catch (IOException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_quitActionPerformed
+
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        try {
+            String ops = message.getText();
+            outStream.write((ops+"\n").getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_sendActionPerformed
+
+    private void enterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_enterKeyPressed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        try{
+            BufferedReader keyboardStream = new BufferedReader(new InputStreamReader(System.in));
+            Socket socket = new Socket("localhost", 2011);
+            
+            InputStream inStream = socket.getInputStream();
+            OutputStream outStream = socket.getOutputStream();
+			
+            boolean done = false;
+            
+            Thread readerThread = new Thread(() -> {
+                try (BufferedReader serverIn = new BufferedReader(new InputStreamReader(inStream))) {
+                    String line;
+                    while ((line = serverIn.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (IOException e) {
+                }
+            });
+            readerThread.setDaemon(true);
+            readerThread.start();
+            				
+           }catch(IOException e){	
+        }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
