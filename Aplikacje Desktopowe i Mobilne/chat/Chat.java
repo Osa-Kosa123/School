@@ -41,7 +41,11 @@ public class Chat extends javax.swing.JFrame {
         chatOptions = new javax.swing.JPanel();
         group = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         messageBox = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         send = new javax.swing.JButton();
         message = new javax.swing.JTextField();
@@ -59,15 +63,24 @@ public class Chat extends javax.swing.JFrame {
         group.setMaximumSize(new java.awt.Dimension(96, 23));
         group.setPreferredSize(new java.awt.Dimension(96, 23));
 
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "trilo", "lolo" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList1.setVisibleRowCount(16);
+        jScrollPane2.setViewportView(jList1);
+
         javax.swing.GroupLayout chatOptionsLayout = new javax.swing.GroupLayout(chatOptions);
         chatOptions.setLayout(chatOptionsLayout);
         chatOptionsLayout.setHorizontalGroup(
             chatOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chatOptionsLayout.createSequentialGroup()
+            .addGroup(chatOptionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(chatOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(group, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator1))
+                    .addComponent(group, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         chatOptionsLayout.setVerticalGroup(
@@ -77,18 +90,25 @@ public class Chat extends javax.swing.JFrame {
                 .addComponent(group, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout messageBoxLayout = new javax.swing.GroupLayout(messageBox);
         messageBox.setLayout(messageBoxLayout);
         messageBoxLayout.setHorizontalGroup(
             messageBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         messageBoxLayout.setVerticalGroup(
             messageBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 362, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
 
         jPanel3.setBackground(new java.awt.Color(232, 232, 232));
@@ -101,8 +121,8 @@ public class Chat extends javax.swing.JFrame {
         });
 
         message.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                enterKeyTyped(evt);
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                messageKeyPressed(evt);
             }
         });
 
@@ -196,22 +216,23 @@ public class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_quitActionPerformed
 
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
-        try {
-            String ops = message.getText();
-            outStream.write((ops+"\n").getBytes());
-        } catch (IOException ex) {
-            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        send();
     }//GEN-LAST:event_sendActionPerformed
 
-    private void enterKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterKeyTyped
-        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER)
-            message.setText("yes");
-        else{
-            System.out.println(": " + evt.getKeyCode());
-        }
-    }//GEN-LAST:event_enterKeyTyped
+    private void messageKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_messageKeyPressed
+        send();
+    }//GEN-LAST:event_messageKeyPressed
 
+    private void send(){
+        if(message.getText().trim() != ""){
+            try {
+                String ops = message.getText();
+                outStream.write((ops+"\n").getBytes());
+            } catch (IOException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -270,10 +291,14 @@ public class Chat extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel chatOptions;
     private javax.swing.JButton group;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField message;
     private javax.swing.JPanel messageBox;
     private javax.swing.JButton quit;
