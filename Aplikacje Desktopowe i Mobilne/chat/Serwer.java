@@ -11,7 +11,8 @@ public class Serwer {
             ServerSocket s = new ServerSocket(2011);
             System.out.println("Serwer Run...");
             ServerThread sThread = new ServerThread(v);
-                         
+            sThread.start();
+
             while(true){
                 Socket incoming = s.accept();
                 ClientThread cThread = new ClientThread(incoming);

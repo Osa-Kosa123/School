@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -26,6 +27,42 @@ public class Chat extends javax.swing.JFrame {
      */
     public Chat() {
         initComponents();
+        startMessageReader();
+    }
+    
+    private void startMessageReader() {
+        new Thread(() -> {
+            try {
+                while (true) {
+                    if (inStream != null) {
+                        StringBuffer sb = new StringBuffer();
+                        int k;
+                        while ((k = inStream.read()) != -1 && k != '\n') {
+                            sb.append((char) k);
+                        }
+                        String message = sb.toString().trim();
+                        if (!message.isEmpty()) {
+                            displayMessage(message);
+                        }
+                    }
+                    Thread.sleep(100);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+    }
+    
+    private void displayMessage(final String message) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            messageArea.append(message + "\n");
+            messageArea.setCaretPosition(messageArea.getDocument().getLength());
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                messageArea.append(message + "\n");
+                messageArea.setCaretPosition(messageArea.getDocument().getLength());
+            });
+        }
     }
 
     /**
@@ -45,7 +82,7 @@ public class Chat extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<>();
         messageBox = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        messageArea = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         send = new javax.swing.JButton();
         message = new javax.swing.JTextField();
@@ -95,10 +132,12 @@ public class Chat extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        messageArea.setEditable(false);
+        messageArea.setColumns(20);
+        messageArea.setLineWrap(true);
+        messageArea.setRows(5);
+        messageArea.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(messageArea);
 
         javax.swing.GroupLayout messageBoxLayout = new javax.swing.GroupLayout(messageBox);
         messageBox.setLayout(messageBoxLayout);
@@ -220,11 +259,13 @@ public class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_sendActionPerformed
 
     private void messageKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_messageKeyPressed
-        send();
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            send();
+        }
     }//GEN-LAST:event_messageKeyPressed
 
     private void send(){
-        if(message.getText().trim() != ""){
+        if(!message.getText().trim().equals("")){
             try {
                 String ops = message.getText();
                 outStream.write((ops+"\n").getBytes());
@@ -298,8 +339,8 @@ public class Chat extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField message;
+    private javax.swing.JTextArea messageArea;
     private javax.swing.JPanel messageBox;
     private javax.swing.JButton quit;
     private javax.swing.JButton send;

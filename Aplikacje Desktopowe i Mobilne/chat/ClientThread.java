@@ -18,28 +18,30 @@ public class ClientThread extends Thread {
     }
     
     public void run(){
-	try{
+    try{
             boolean done = false;
-			
-            int k;			
+
+            int k;
             StringBuffer sb;
-            
+
             while(!done){
                 sb  =new StringBuffer();
-		while((k=in.read())!=-1 && k!='\n') sb.append((char)k);
-                    String so = sb.toString().trim();
-                    if(so.equals("/end")){
-                        ServerThread.leave(socket);
-                        done = true;
-                    }else{
-                        ServerThread.message(socket, so);
-                    }
+                while((k=in.read())!=-1 && k!='\n') sb.append((char)k);
+                String so = sb.toString().trim();
+                if(so.equals("/end")){
+                    ServerThread.leave(socket);
+                    done = true;
+                }else{
+                    ServerThread.message(socket, so);
+                }
             }
-            in.close();
-            out.close();
-            socket.close();
-	}catch (Exception ex) {
+    }catch (Exception ex) {
             Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { if(in != null) in.close(); } catch(IOException e) {}
+            try { if(out != null) out.close(); } catch(IOException e) {}
+            try { if(socket != null && !socket.isClosed()) socket.close(); } catch(IOException e) {}
+            try { ServerThread.removeClient(this); } catch(Exception e) { /* swallow */ }
         }
     }	
 }
