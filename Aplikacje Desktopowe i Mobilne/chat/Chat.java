@@ -295,8 +295,8 @@ public class Chat extends javax.swing.JFrame {
             inStream.close();
             outStream.close();
             socket.close();
-            this.dispose();
-//            Runtime.getRuntime().exit(0);
+//            this.dispose();
+            Runtime.getRuntime().exit(0);
         } catch (Exception e) {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, e);
         }
