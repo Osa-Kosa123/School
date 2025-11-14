@@ -27,12 +27,12 @@ public class Bankomat extends javax.swing.JFrame {
 //\    L  - choose language
 //    P  - PIN
 //    A  - action (withdraw, current balance, change PIN)
-//    Ws  - withdraw set ammount
-//    WC - withdraw custom ammount
+//\    Ws  - withdraw set ammount
+//\    WC - withdraw custom ammount
 //    CB - current balance
 //    CP - change PIN
-//    CO - card output
-//    MO - money output
+//\    CO - card output
+//\    MO - money output
     
     public Bankomat() {
         initComponents();
@@ -643,6 +643,7 @@ public class Bankomat extends javax.swing.JFrame {
                     }else{
                         screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     couldn't withdraw given ammount");
                     }
+                    moneyOut = "";
                 }else{
                     withdrawAmount = Integer.parseInt(moneyOut);
                     if(withdrawAmount > 1000){
@@ -651,6 +652,8 @@ public class Bankomat extends javax.swing.JFrame {
                         }else{
                             screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     can't withdraw more than 1000 PLN");
                         }
+                        moneyOut = "";
+                        withdrawAmount = 0;
                     }else{
                         if(withdrawAmount > balance){
                             if(language.equals("pl")){
@@ -658,6 +661,8 @@ public class Bankomat extends javax.swing.JFrame {
                             }else{
                                 screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     insufficient founds");
                             }
+                            moneyOut = "";
+                            withdrawAmount = 0;
                         }else{
                         stage = "CO";
                         refreshScreen();
@@ -675,6 +680,10 @@ public class Bankomat extends javax.swing.JFrame {
             withdrawAmount = 500;
             stage = "CO";
             refreshScreen();
+        }else{
+            if(stage.equals("WC"){
+                moneyOut = "";
+            }
         }
         enableButtons(true);
     }//GEN-LAST:event_RMBActionPerformed
@@ -1782,8 +1791,7 @@ public class Bankomat extends javax.swing.JFrame {
                 break;
             case "CB":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Wybierz rodzaj tranzakji\n\n\n\t\t\t           wypłata ->\n\n\n\t\t                      dostępne środki ->\n\n\n\t\t        zmiana numeru PIN karty ->");
-
+                    screen.setText("\n\t         Dostępne środki\n\n\n\t\t          " + balance + " PLN");
                 }else{
                     screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
