@@ -1,4 +1,7 @@
 
+import java.text.DecimalFormat;
+
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -14,22 +17,24 @@ public class Bankomat extends javax.swing.JFrame {
     /**
      * Creates new form Bankomat
      */
+    DecimalFormat df = new DecimalFormat("0.00");
     double balance = 8000.00;
+    int[] banknotes = {0, 0, 0, 0, 0};
     String pin = "1164";
     String enteredPin = "";
     boolean cardIn = false;
     int withdrawAmount = 0;
     String moneyOut = "";
     String language = "pl";
-    String action;
     String stage = "CI";
 //\    CI - card input
 //\    L  - choose language
 //    P  - PIN
-//    A  - action (withdraw, current balance, change PIN)
-//\    Ws  - withdraw set ammount
-//\    WC - withdraw custom ammount
-//    CB - current balance
+//    A  - action (deposit, withdraw, current balance, change PIN)
+//    D  - deposit
+//    Ws - withdraw set ammount
+//    WC - withdraw custom ammount
+//\    CB - current balance
 //    CP - change PIN
 //\    CO - card output
 //\    MO - money output
@@ -580,14 +585,15 @@ public class Bankomat extends javax.swing.JFrame {
     private void LMTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LMTActionPerformed
         enableButtons(false);
         switch(stage){
-            case "L":
-                language = "en";
-                stage = "P";
-                refreshScreen();
-                break;
+//            case "L":
+//                language = "en";
+//                stage = "P";
+//                refreshScreen();
+//                break;
             case "WS":
                 if(balance >= 20){
                     withdrawAmount = 20;
+                    banknotes[4] = 1;
                     stage = "CO";
                     refreshScreen();
                 }
@@ -600,6 +606,7 @@ public class Bankomat extends javax.swing.JFrame {
         enableButtons(false);
         if(stage.equals("WS") && balance >= 50){
             withdrawAmount = 50;
+            banknotes[3] = 1;
             stage = "CO";
             refreshScreen();
         }
@@ -610,6 +617,7 @@ public class Bankomat extends javax.swing.JFrame {
         enableButtons(false);
         if(stage.equals("WS") && balance >= 100){
             withdrawAmount = 100;
+            banknotes[2] = 1;
             stage = "CO";
             refreshScreen();
         }
@@ -625,13 +633,13 @@ public class Bankomat extends javax.swing.JFrame {
                 refreshScreen();
                 break;
             case "A":
-                action = "W";
                 stage = "WS";
                 refreshScreen();
                 break;
             case "WS":
                 if(balance >= 200){
                     withdrawAmount = 200;
+                    banknotes[1] = 1;
                     stage = "CO";
                     refreshScreen();
                 }
@@ -641,29 +649,25 @@ public class Bankomat extends javax.swing.JFrame {
                     if(language.equals("pl")){
                         screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     nie można wypłacić podanej kwoty");
                     }else{
-                        screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     couldn't withdraw given ammount");
+//                        screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     couldn't withdraw given ammount");
                     }
-                    moneyOut = "";
                 }else{
                     withdrawAmount = Integer.parseInt(moneyOut);
                     if(withdrawAmount > 1000){
                         if(language.equals("pl")){
                             screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     kwota nie moźe przekraczać 1000 PLN");
                         }else{
-                            screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     can't withdraw more than 1000 PLN");
+//                            screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     can't withdraw more than 1000 PLN");
                         }
-                        moneyOut = "";
-                        withdrawAmount = 0;
                     }else{
                         if(withdrawAmount > balance){
                             if(language.equals("pl")){
                                 screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     brak środków na kącie");
                             }else{
-                                screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     insufficient founds");
+//                                screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     insufficient founds");
                             }
-                            moneyOut = "";
-                            withdrawAmount = 0;
                         }else{
+                        banknotes = moneycount(withdrawAmount);
                         stage = "CO";
                         refreshScreen();
                         }
@@ -676,23 +680,43 @@ public class Bankomat extends javax.swing.JFrame {
 
     private void RMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RMBActionPerformed
         enableButtons(false);
-        if(stage.equals("WS") && balance >= 500){
-            withdrawAmount = 500;
-            stage = "CO";
-            refreshScreen();
-        }else{
-            if(stage.equals("WC"){
-                moneyOut = "";
-            }
+        switch(stage){
+            case "A":
+                stage = "CB";
+                refreshScreen();
+                break;
+            case "CB":
+                enteredPin = "";
+                stage = "L";
+                refreshScreen();
+                break;
+            case "WS":
+                if(balance >= 500){
+                    withdrawAmount = 500;
+                    banknotes[0] = 1;
+                    stage = "CO";
+                        refreshScreen();
+                }
+                break;
         }
         enableButtons(true);
     }//GEN-LAST:event_RMBActionPerformed
 
     private void RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBActionPerformed
         enableButtons(false);
-        if(stage.equals("WS")){
-            stage = "WC";
-            refreshScreen();
+        switch (stage){
+            case "A":
+                enteredPin = "";
+                stage = "CP";
+                refreshScreen();
+            case "CB":
+                stage = "CO";
+                refreshScreen();
+                break;
+            case "WS":
+                stage = "WC";
+                refreshScreen();
+                break;
         }
         enableButtons(true);
     }//GEN-LAST:event_RBActionPerformed
@@ -707,8 +731,16 @@ public class Bankomat extends javax.swing.JFrame {
         }else if(stage.equals("CO") && cardIn == true){
             cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
             cardIn = false;
-            stage = "MO";
-            refreshScreen();
+            if(withdrawAmount != 0){
+                stage = "MO";
+                refreshScreen();
+            }else{
+                stage = "CI";
+                refreshScreen();
+            }
+            enteredPin = "";
+            moneyOut = "";
+            language = "pl";
         }
         enableButtons(true);
     }//GEN-LAST:event_cardReaderActionPerformed
@@ -737,22 +769,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "1";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "1";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "1";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "1";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -782,28 +836,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "1";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "1";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "1";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "1";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "1";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -834,22 +888,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "2";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "2";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "2";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "2";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -879,28 +955,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "2";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "2";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "2";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "2";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "2";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -931,22 +1007,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "3";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "3";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "3";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "3";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -976,28 +1074,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "3";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "3";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "3";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "3";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "3";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1028,22 +1126,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "4";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "4";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "4";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "4";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -1073,28 +1193,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "4";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "4";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "4";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "4";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "4";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1125,22 +1245,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "5";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "5";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "5";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "5";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -1170,28 +1312,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "5";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "5";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "5";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "5";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "5";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1222,22 +1364,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "6";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "6";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "6";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "6";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -1267,28 +1431,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "6";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "6";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "6";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "6";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "6";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1319,22 +1483,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "7";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "7";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "7";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "7";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -1364,28 +1550,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "7";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "7";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "7";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "7";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "7";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1416,22 +1602,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "8";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "8";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "8";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "8";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -1461,28 +1669,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "8";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "8";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "8";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "8";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "8";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1513,22 +1721,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "9";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "9";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "9";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "9";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -1558,28 +1788,28 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 0:
-                            moneyOut += "9";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
-                            break;
-                        case 1:
-                            moneyOut += "9";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "9";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "9";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "9";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1610,22 +1840,44 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "0";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "0";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "0";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "0";
-                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+                            screen.setText("\n\t        Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
@@ -1651,24 +1903,24 @@ public class Bankomat extends javax.swing.JFrame {
                             break;
                     }
                 }else{
-                    switch(moneyOut.length()){
-                        case 1:
-                            moneyOut += "0";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
-                            break;
-                        case 2:
-                            moneyOut += "0";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
-                            break;
-                        case 3:
-                            moneyOut += "0";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
-                            break;
-                        case 4:
-                            moneyOut += "0";
-                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                            break;
-                    }
+//                    switch(moneyOut.length()){
+//                        case 1:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
                 }
                 break;
         }
@@ -1717,6 +1969,7 @@ public class Bankomat extends javax.swing.JFrame {
         if(stage.equals("MO")){
             money.setBackground(new java.awt.Color(82, 80, 82));
             balance -= withdrawAmount;
+            withdrawAmount = 0;
             stage = "CI";
             refreshScreen();
         }
@@ -1737,16 +1990,16 @@ public class Bankomat extends javax.swing.JFrame {
                         break;
                 }
             }else{
-                switch(moneyOut.length()){
-                    case 1:
-                        moneyOut += "0000";
-                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                        break;
-                    case 2:
-                        moneyOut += "000";
-                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
-                        break;
-                }
+//                switch(moneyOut.length()){
+//                    case 1:
+//                        moneyOut += "0000";
+//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                        break;
+//                    case 2:
+//                        moneyOut += "000";
+//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                        break;
+//                }
             }
         }
     }//GEN-LAST:event_zeroZeroZeroActionPerformed
@@ -1754,54 +2007,63 @@ public class Bankomat extends javax.swing.JFrame {
     private void refreshScreen(){
         switch(stage){
             case "CI":
-                screen.setText("\n\n\n\n\t           Proszę włożyć kartę\n\t         Please insert your card");
+                screen.setText("\n\n\n\n\t           Proszę włożyć kartę"/*\n\t         Please insert your card*/);
                 cardIndicator.setBackground(new java.awt.Color(0, 164, 0));
                 break;
             case "L":
-                screen.setText("\n\t           Proszę wybrać język\n\t         Please select language\n\n <- English\t\t\t              Polski ->");
+                screen.setText("\n\t           Proszę wybrać język\n\t         Please select language\n\n\t\t\t              Polski ->");
                 break;
             case "P":
                 if(language.equals("pl")){
                     screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
                 }else{
-                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
                 }
                 break;
             case "A":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Wybierz rodzaj tranzakji\n\n\n\t\t\t           wypłata ->\n\n\n\t\t                      dostępne środki ->\n\n\n\t\t        zmiana numeru PIN karty ->");
+                    screen.setText("\n\t         Wybierz rodzaj tranzakji\n\n\n<- wpłata\t\t\t           wypłata ->\n\n\n\t\t                      dostępne środki ->\n\n\n\t\t        zmiana numeru PIN karty ->");
                 }else{
-                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
                 break;
+            case "D":
+                if(language.equals("pl")){
+                    screen.setText("\n\t         Dostępne środki\n\n\n|||||||||1|||||||||1|||||||||1|||||||||1|||||||||1|||||||||1||||\n\n\n\t\t                      nowa transakcja ->\n\n\n\t\t        koniec transakcji ->");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
             case "WS":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Wybierz rządaną kwotę\n\n\n<- 20 PLN\t\t\t         200 PLN ->\n\n\n<- 50 PLN\t\t\t         500 PLN ->\n\n\n<- 100 PLN\t\t\t               inna ->");
+                    screen.setText("\n\t         Wybierz rządaną ;kwotę\n\n\n<- 20 PLN\t\t\t         200 PLN ->\n\n\n<- 50 PLN\t\t\t         500 PLN ->\n\n\n<- 100 PLN\t\t\t               inna ->");
                 }else{
-                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     0 PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
+                    screen.setText("\n\t    Wprowadź ;kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     0 PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
 
                 }else{
-                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
                 break;
             case "CB":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Dostępne środki\n\n\n\t\t          " + balance + " PLN");
+                    screen.setText("\n\t             Dostępne środki\n\n\n");
+                    for(int i=0; i<(51-Double.toString(balance).length()); i++){
+                        screen.append(" ");
+                    }
+                    screen.append(df.format(balance) + "\n\n\n\t\t                      nowa transakcja ->\n\n\n\t\t                      koniec transakcji ->");
                 }else{
-                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
                 break;
             case "CP":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Wybierz rodzaj tranzakji\n\n\n\t\t\t           wypłata ->\n\n\n\t\t                      dostępne środki ->\n\n\n\t\t        zmiana numeru PIN karty ->");
-
+                    screen.setText("\n\t         Wpisz nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
                 }else{
-                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
                 break;
             case "CO":
@@ -1809,15 +2071,15 @@ public class Bankomat extends javax.swing.JFrame {
                 if(language.equals("pl")){
                     screen.setText("\n\n\n\n\t        Proszę zabrać kartę");
                 }else{
-                    screen.setText("\n\t   Please take out your card");
+//                    screen.setText("\n\t   Please take out your card");
                 }
                 break;
             case "MO":
                 money.setBackground(new java.awt.Color(74, 72, 74));
                 if(language.equals("pl")){
-                    screen.setText("\n\n\n\n\t     Proszę zabrać gotówkę");
-                }else{
-                    screen.setText("\n\n\n\n\t Please take out your money");
+                    screen.setText("\n\n\n\n\t        Proszę zabrać gotówkę\n\n\n                        "+banknotes[0]+"x500, "+banknotes[1]+"x200, "+banknotes[2]+"x100, "+banknotes[3]+"x50, "+banknotes[4]+"x20, ");
+                }else{  
+//                    screen.setText("\n\n\n\n\t Please take out your money");
                 }
                 break;
             
@@ -1851,6 +2113,28 @@ public class Bankomat extends javax.swing.JFrame {
         money.setEnabled(state);
         unknownSmall.setEnabled(state);
         unknownLarge.setEnabled(state);
+    }
+    
+    private int[] moneycount(int withdrawAmount){
+        while (withdrawAmount != 0){
+            if(withdrawAmount - 500 >= 0){
+                withdrawAmount -= 500;
+                banknotes[0] +=1;
+            }else if(withdrawAmount - 200 >= 0){
+                withdrawAmount -= 200;
+                banknotes[1] +=1;
+            }else if(withdrawAmount - 100 >= 0){
+                withdrawAmount -= 100;
+                banknotes[2] +=1;
+            }else if(withdrawAmount - 50 >= 0){
+                withdrawAmount -= 50;
+                banknotes[3] +=1;
+            }else{
+                withdrawAmount -= 20;
+                banknotes[4] +=1;
+            }
+        }
+        return banknotes;
     }
     /**
      * @param args the command line arguments
