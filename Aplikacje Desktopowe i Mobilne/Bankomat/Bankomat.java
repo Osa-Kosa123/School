@@ -1,3 +1,8 @@
+
+import java.text.DecimalFormat;
+
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -5,15 +10,48 @@
 
 /**
  *
- * @author Admin
+ * @author Oskar
  */
 public class Bankomat extends javax.swing.JFrame {
 
     /**
      * Creates new form Bankomat
      */
+    String[][] cards = {{"958", "7564", "7455.85", "notLocked"}, {"510", "4784", "7021.75", "notLocked"}, {"877", "4959", "7274.97", "notLocked"}};
+    DecimalFormat df = new DecimalFormat("0.00");
+    double balance = 8000.00;
+    int[] banknotes = new int[4];
+    int selectedCard;
+    String pin = "1164";
+    String enteredPin = "";
+    String newPin = "";
+    int incorrectPin = 0;
+    boolean locked = false;
+    boolean cardIn = false;
+    int withdrawAmount = 0;
+    String moneyOut = "";
+    String language = "pl";
+    String stage = "CI";
+//    CC - choose card
+//\    CI - card input
+//    CL - card locked
+//\    L  - choose language
+//    P  - PIN
+//    WP - wrong PIN
+//    A  - action (deposit, withdraw, current balance, change PIN)
+//    D  - deposit
+//    WS - withdraw set ammount
+//    WC - withdraw custom ammount
+//\    CB - current balance
+//\    NP - change PIN
+//    CP - confirm new PIN
+//    WNP - wrong new PIN
+//\    CO - card output
+//\    MO - money output
+    
     public Bankomat() {
         initComponents();
+        refreshScreen();
     }
 
     /**
@@ -25,84 +63,513 @@ public class Bankomat extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        body = new javax.swing.JPanel();
+        moneyDeposit = new javax.swing.JPanel();
+        money = new javax.swing.JButton();
+        cardIndicator = new javax.swing.JPanel();
+        cardReader = new javax.swing.JButton();
+        numberPad = new javax.swing.JPanel();
+        two = new javax.swing.JButton();
+        one = new javax.swing.JButton();
+        three = new javax.swing.JButton();
+        five = new javax.swing.JButton();
+        four = new javax.swing.JButton();
+        six = new javax.swing.JButton();
+        zeroZeroZero = new javax.swing.JButton();
+        zero = new javax.swing.JButton();
+        unknownSmall = new javax.swing.JButton();
+        seven = new javax.swing.JButton();
+        eight = new javax.swing.JButton();
+        nine = new javax.swing.JButton();
+        unknownLarge = new javax.swing.JButton();
+        Enter = new javax.swing.JButton();
+        Clear = new javax.swing.JButton();
+        Cancel = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        RB = new javax.swing.JButton();
+        screenHolder = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jPanel2 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        screen = new javax.swing.JTextArea();
+        LB = new javax.swing.JButton();
+        LMB = new javax.swing.JButton();
+        LMT = new javax.swing.JButton();
+        LT = new javax.swing.JButton();
+        RMB = new javax.swing.JButton();
+        RMT = new javax.swing.JButton();
+        RT = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("jButton1");
+        body.setBackground(new java.awt.Color(169, 169, 169));
+        body.setPreferredSize(new java.awt.Dimension(1080, 720));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        moneyDeposit.setBackground(new java.awt.Color(8, 8, 8));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 263, Short.MAX_VALUE)
+        money.setBackground(new java.awt.Color(82, 80, 82));
+        money.setPreferredSize(new java.awt.Dimension(314, 47));
+        money.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moneyActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout moneyDepositLayout = new javax.swing.GroupLayout(moneyDeposit);
+        moneyDeposit.setLayout(moneyDepositLayout);
+        moneyDepositLayout.setHorizontalGroup(
+            moneyDepositLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(moneyDepositLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(money, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+        moneyDepositLayout.setVerticalGroup(
+            moneyDepositLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, moneyDepositLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(money, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jButton2.setText("jButton2");
+        cardIndicator.setBackground(new java.awt.Color(48, 148, 0));
 
-        jButton3.setText("jButton3");
+        cardReader.setBackground(new java.awt.Color(0, 32, 0));
+        cardReader.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cardReaderActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cardIndicatorLayout = new javax.swing.GroupLayout(cardIndicator);
+        cardIndicator.setLayout(cardIndicatorLayout);
+        cardIndicatorLayout.setHorizontalGroup(
+            cardIndicatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardIndicatorLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(cardReader, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+        cardIndicatorLayout.setVerticalGroup(
+            cardIndicatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardIndicatorLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(cardReader)
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        numberPad.setBackground(new java.awt.Color(160, 160, 160));
+
+        two.setBackground(new java.awt.Color(124, 124, 124));
+        two.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        two.setForeground(new java.awt.Color(69, 69, 69));
+        two.setText("2");
+        two.setPreferredSize(new java.awt.Dimension(48, 48));
+        two.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                twoActionPerformed(evt);
+            }
+        });
+
+        one.setBackground(new java.awt.Color(124, 124, 124));
+        one.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        one.setForeground(new java.awt.Color(69, 69, 69));
+        one.setText("1");
+        one.setPreferredSize(new java.awt.Dimension(48, 48));
+        one.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                oneActionPerformed(evt);
+            }
+        });
+
+        three.setBackground(new java.awt.Color(124, 124, 124));
+        three.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        three.setForeground(new java.awt.Color(69, 69, 69));
+        three.setText("3");
+        three.setPreferredSize(new java.awt.Dimension(48, 48));
+        three.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                threeActionPerformed(evt);
+            }
+        });
+
+        five.setBackground(new java.awt.Color(124, 124, 124));
+        five.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        five.setForeground(new java.awt.Color(69, 69, 69));
+        five.setText("5");
+        five.setPreferredSize(new java.awt.Dimension(48, 48));
+        five.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fiveActionPerformed(evt);
+            }
+        });
+
+        four.setBackground(new java.awt.Color(124, 124, 124));
+        four.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        four.setForeground(new java.awt.Color(69, 69, 69));
+        four.setText("4");
+        four.setPreferredSize(new java.awt.Dimension(48, 48));
+        four.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fourActionPerformed(evt);
+            }
+        });
+
+        six.setBackground(new java.awt.Color(124, 124, 124));
+        six.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        six.setForeground(new java.awt.Color(69, 69, 69));
+        six.setText("6");
+        six.setPreferredSize(new java.awt.Dimension(48, 48));
+        six.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sixActionPerformed(evt);
+            }
+        });
+
+        zeroZeroZero.setBackground(new java.awt.Color(124, 124, 124));
+        zeroZeroZero.setForeground(new java.awt.Color(69, 69, 69));
+        zeroZeroZero.setText("000");
+        zeroZeroZero.setPreferredSize(new java.awt.Dimension(48, 48));
+        zeroZeroZero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zeroZeroZeroActionPerformed(evt);
+            }
+        });
+
+        zero.setBackground(new java.awt.Color(124, 124, 124));
+        zero.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        zero.setForeground(new java.awt.Color(69, 69, 69));
+        zero.setText("0");
+        zero.setPreferredSize(new java.awt.Dimension(48, 48));
+        zero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zeroActionPerformed(evt);
+            }
+        });
+
+        unknownSmall.setBackground(new java.awt.Color(124, 124, 124));
+        unknownSmall.setForeground(new java.awt.Color(69, 69, 69));
+
+        seven.setBackground(new java.awt.Color(124, 124, 124));
+        seven.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        seven.setForeground(new java.awt.Color(69, 69, 69));
+        seven.setText("7");
+        seven.setPreferredSize(new java.awt.Dimension(48, 48));
+        seven.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sevenActionPerformed(evt);
+            }
+        });
+
+        eight.setBackground(new java.awt.Color(124, 124, 124));
+        eight.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        eight.setForeground(new java.awt.Color(69, 69, 69));
+        eight.setText("8");
+        eight.setPreferredSize(new java.awt.Dimension(48, 48));
+        eight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eightActionPerformed(evt);
+            }
+        });
+
+        nine.setBackground(new java.awt.Color(124, 124, 124));
+        nine.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        nine.setForeground(new java.awt.Color(69, 69, 69));
+        nine.setText("9");
+        nine.setPreferredSize(new java.awt.Dimension(48, 48));
+        nine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nineActionPerformed(evt);
+            }
+        });
+
+        unknownLarge.setBackground(new java.awt.Color(124, 124, 124));
+        unknownLarge.setFont(new java.awt.Font("Segoe UI", 0, 8)); // NOI18N
+        unknownLarge.setForeground(new java.awt.Color(69, 69, 69));
+        unknownLarge.setMaximumSize(new java.awt.Dimension(100, 100));
+        unknownLarge.setMinimumSize(new java.awt.Dimension(0, 0));
+        unknownLarge.setPreferredSize(new java.awt.Dimension(72, 48));
+
+        Enter.setBackground(new java.awt.Color(124, 124, 124));
+        Enter.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        Enter.setForeground(new java.awt.Color(69, 69, 69));
+        Enter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Enter.png"))); // NOI18N
+        Enter.setMaximumSize(new java.awt.Dimension(100, 100));
+        Enter.setMinimumSize(new java.awt.Dimension(0, 0));
+        Enter.setPreferredSize(new java.awt.Dimension(72, 48));
+        Enter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EnterActionPerformed(evt);
+            }
+        });
+
+        Clear.setBackground(new java.awt.Color(124, 124, 124));
+        Clear.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        Clear.setForeground(new java.awt.Color(69, 69, 69));
+        Clear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Clear.png"))); // NOI18N
+        Clear.setMaximumSize(new java.awt.Dimension(100, 100));
+        Clear.setMinimumSize(new java.awt.Dimension(0, 0));
+        Clear.setPreferredSize(new java.awt.Dimension(72, 48));
+        Clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClearActionPerformed(evt);
+            }
+        });
+
+        Cancel.setBackground(new java.awt.Color(124, 124, 124));
+        Cancel.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        Cancel.setForeground(new java.awt.Color(69, 69, 69));
+        Cancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Cancel.png"))); // NOI18N
+        Cancel.setMaximumSize(new java.awt.Dimension(100, 100));
+        Cancel.setMinimumSize(new java.awt.Dimension(0, 0));
+        Cancel.setPreferredSize(new java.awt.Dimension(72, 48));
+        Cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout numberPadLayout = new javax.swing.GroupLayout(numberPad);
+        numberPad.setLayout(numberPadLayout);
+        numberPadLayout.setHorizontalGroup(
+            numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(numberPadLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(numberPadLayout.createSequentialGroup()
+                        .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(seven, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(unknownSmall, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(numberPadLayout.createSequentialGroup()
+                                .addComponent(eight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(nine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Enter, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(numberPadLayout.createSequentialGroup()
+                                .addComponent(zero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(zeroZeroZero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(unknownLarge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(numberPadLayout.createSequentialGroup()
+                        .addComponent(one, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(two, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(three, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Cancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(numberPadLayout.createSequentialGroup()
+                        .addComponent(four, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(five, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(six, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Clear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        numberPadLayout.setVerticalGroup(
+            numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(numberPadLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(one, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(two, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(three, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(five, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(four, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(six, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Clear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(seven, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Enter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(zero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unknownSmall, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(numberPadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(zeroZeroZero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(unknownLarge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        jPanel1.setBackground(new java.awt.Color(169, 169, 169));
+        jPanel1.setPreferredSize(new java.awt.Dimension(496, 253));
+
+        RB.setBackground(new java.awt.Color(140, 140, 140));
+        RB.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        RB.setPreferredSize(new java.awt.Dimension(32, 32));
+        RB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RBActionPerformed(evt);
+            }
+        });
+
+        screen.setBackground(new java.awt.Color(96, 96, 96));
+        screen.setColumns(20);
+        screen.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        screen.setForeground(new java.awt.Color(192, 192, 192));
+        screen.setRows(10);
+        screen.setToolTipText("");
+        screen.setWrapStyleWord(true);
+        screen.setAutoscrolls(false);
+        jScrollPane1.setViewportView(screen);
+
+        javax.swing.GroupLayout screenHolderLayout = new javax.swing.GroupLayout(screenHolder);
+        screenHolder.setLayout(screenHolderLayout);
+        screenHolderLayout.setHorizontalGroup(
+            screenHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+        );
+        screenHolderLayout.setVerticalGroup(
+            screenHolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+        );
+
+        LB.setBackground(new java.awt.Color(140, 140, 140));
+        LB.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        LB.setPreferredSize(new java.awt.Dimension(32, 32));
+        LB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LBActionPerformed(evt);
+            }
+        });
+
+        LMB.setBackground(new java.awt.Color(140, 140, 140));
+        LMB.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        LMB.setPreferredSize(new java.awt.Dimension(32, 32));
+        LMB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LMBActionPerformed(evt);
+            }
+        });
+
+        LMT.setBackground(new java.awt.Color(140, 140, 140));
+        LMT.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        LMT.setPreferredSize(new java.awt.Dimension(32, 32));
+        LMT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LMTActionPerformed(evt);
+            }
+        });
+
+        LT.setBackground(new java.awt.Color(140, 140, 140));
+        LT.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        LT.setPreferredSize(new java.awt.Dimension(32, 32));
+
+        RMB.setBackground(new java.awt.Color(140, 140, 140));
+        RMB.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        RMB.setPreferredSize(new java.awt.Dimension(32, 32));
+        RMB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RMBActionPerformed(evt);
+            }
+        });
+
+        RMT.setBackground(new java.awt.Color(140, 140, 140));
+        RMT.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        RMT.setPreferredSize(new java.awt.Dimension(32, 32));
+        RMT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RMTActionPerformed(evt);
+            }
+        });
+
+        RT.setBackground(new java.awt.Color(140, 140, 140));
+        RT.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        RT.setPreferredSize(new java.awt.Dimension(32, 32));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(70, 70, 70))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(32, 32, 32))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jButton3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(LMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LMT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(screenHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(RB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RMT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(32, 32, 32)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(114, 114, 114)
-                                .addComponent(jButton2)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addGap(38, 38, 38)))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(screenHolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(76, 76, 76))
+                        .addComponent(RT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(RMT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(RMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(RB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20))))
+                        .addComponent(LT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(LMT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(LMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(LB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(21, 21, 21))
+        );
+
+        javax.swing.GroupLayout bodyLayout = new javax.swing.GroupLayout(body);
+        body.setLayout(bodyLayout);
+        bodyLayout.setHorizontalGroup(
+            bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bodyLayout.createSequentialGroup()
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addGap(216, 216, 216)
+                        .addComponent(numberPad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(95, 95, 95)
+                        .addComponent(moneyDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 52, 52)
+                        .addComponent(cardIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(161, 161, 161))
+        );
+        bodyLayout.setVerticalGroup(
+            bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyLayout.createSequentialGroup()
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addGap(273, 273, 273)
+                        .addComponent(cardIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(64, 64, 64)
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(numberPad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyLayout.createSequentialGroup()
+                        .addComponent(moneyDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)))
+                .addGap(91, 91, 91))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -110,19 +577,2254 @@ public class Bankomat extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void LMTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LMTActionPerformed
+        enableButtons(false);
+        switch(stage){
+//            case "L":
+//                language = "en";
+//                stage = "P";
+//                refreshScreen();
+//                break;
+            case "WS":
+                if(balance >= 20){
+                    withdrawAmount = 20;
+                    banknotes[4] = 1;
+                    stage = "CO";
+                    refreshScreen();
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_LMTActionPerformed
+
+    private void LMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LMBActionPerformed
+        enableButtons(false);
+        if(stage.equals("WS") && balance >= 50){
+            withdrawAmount = 50;
+            banknotes[3] = 1;
+            stage = "CO";
+            refreshScreen();
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_LMBActionPerformed
+
+    private void LBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LBActionPerformed
+        enableButtons(false);
+        if(stage.equals("WS") && balance >= 100){
+            withdrawAmount = 100;
+            banknotes[2] = 1;
+            stage = "CO";
+            refreshScreen();
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_LBActionPerformed
+
+    private void RMTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RMTActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "L":
+                language = "pl";
+                stage = "P";
+                refreshScreen();
+                break;
+            case "A":
+                stage = "WS";
+                refreshScreen();
+                break;
+            case "WS":
+                if(balance >= 200){
+                    withdrawAmount = 200;
+                    banknotes[1] = 1;
+                    stage = "CO";
+                    refreshScreen();
+                }
+                break;
+            case "WC":
+                if(moneyOut.equals("") || !moneyOut.endsWith("0") || moneyOut.endsWith("10") || moneyOut.endsWith("30")){
+                    if(language.equals("pl")){
+                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     nie można wypłacić podanej kwoty");
+                    }else{
+//                        screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     couldn't withdraw given ammount");
+                    }
+                }else{
+                    withdrawAmount = Integer.parseInt(moneyOut);
+                    if(withdrawAmount > 1000){
+                        if(language.equals("pl")){
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     kwota nie moźe przekraczać 1000 PLN");
+                        }else{
+//                            screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     can't withdraw more than 1000 PLN");
+                        }
+                    }else{
+                        if(withdrawAmount > balance){
+                            if(language.equals("pl")){
+                                screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     brak środków na kącie");
+                            }else{
+//                                screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     insufficient founds");
+                            }
+                        }else{
+                        banknotes = moneycount(withdrawAmount);
+                        stage = "CO";
+                        refreshScreen();
+                        }
+                    }    
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_RMTActionPerformed
+
+    private void RMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RMBActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "A":
+                stage = "CB";
+                refreshScreen();
+                break;
+            case "CB":
+                enteredPin = "";
+                stage = "L";
+                refreshScreen();
+                break;
+            case "WS":
+                if(balance >= 500){
+                    withdrawAmount = 500;
+                    banknotes[0] = 1;
+                    stage = "CO";
+                        refreshScreen();
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_RMBActionPerformed
+
+    private void RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBActionPerformed
+        enableButtons(false);
+        switch (stage){
+            case "A":
+                enteredPin = "";
+                stage = "NP";
+                refreshScreen();
+                break;
+            case "CB":
+                stage = "CO";
+                refreshScreen();
+                break;
+            case "WS":
+                stage = "WC";
+                refreshScreen();
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_RBActionPerformed
+
+    private void cardReaderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cardReaderActionPerformed
+        enableButtons(false);
+        if(stage.equals("CI") && cardIn == false){
+            cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
+            cardIn = true;
+            if (!locked){
+                stage = "L";
+            }else{
+                stage = "CL";
+            }
+            refreshScreen();
+        }else if((stage.equals("CO") || stage.equals("CL")) && cardIn == true){
+            cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
+            cardIn = false;
+            if(withdrawAmount != 0){
+                stage = "MO";
+                refreshScreen();
+            }else{
+                stage = "CI";
+                refreshScreen();
+            }
+            enteredPin = "";
+            moneyOut = "";
+            language = "pl";
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_cardReaderActionPerformed
+
+    private void oneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "1";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "1";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "1";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "1";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "1";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "1";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "1";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "1";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "1";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_oneActionPerformed
+
+    private void twoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_twoActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "2";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "2";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "2";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "2";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "2";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "2";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "2";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "2";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "2";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_twoActionPerformed
+
+    private void threeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threeActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "3";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "3";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "3";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "3";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "3";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "3";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "3";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "3";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "3";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_threeActionPerformed
+
+    private void fourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fourActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "4";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "4";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "4";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "4";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "4";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "4";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "4";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "4";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "4";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_fourActionPerformed
+
+    private void fiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fiveActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "5";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "5";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "5";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "5";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "5";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "5";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "5";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "5";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "5";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_fiveActionPerformed
+
+    private void sixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sixActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "6";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "6";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "6";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "6";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "6";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "6";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "6";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "6";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "6";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_sixActionPerformed
+
+    private void sevenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sevenActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "7";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "7";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "7";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "7";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "7";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "7";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "7";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "7";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "7";
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_sevenActionPerformed
+
+    private void eightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eightActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "8";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "8";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_eightActionPerformed
+
+    private void nineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nineActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "9";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "9";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 0:
+                            moneyOut += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            break;
+                        case 1:
+                            moneyOut += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 0:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            break;
+//                        case 1:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_nineActionPerformed
+
+    private void zeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zeroActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }else{
+//                    switch(enteredPin.length()){
+//                        case 0:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 1:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 2:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
+//                            break;
+//                        case 3:
+//                            enteredPin += "0";
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXXX\n\n\n\t               Confirm: Enter");
+//                            break;
+//                    }
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 1:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 2:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                        case 3:
+                            enteredPin += "0";
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            break;
+                    }
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    switch(moneyOut.length()){
+                        case 1:
+                            moneyOut += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            break;
+                        case 2:
+                            moneyOut += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            break;
+                        case 3:
+                            moneyOut += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            break;
+                        case 4:
+                            moneyOut += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            break;
+                    }
+                }else{
+//                    switch(moneyOut.length()){
+//                        case 1:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            break;
+//                        case 2:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            break;
+//                        case 3:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            break;
+//                        case 4:
+//                            moneyOut += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            break;
+//                    }
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_zeroActionPerformed
+
+    private void CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelActionPerformed
+        enableButtons(false);
+        if(stage.equals("P")){
+            enteredPin = "";
+            newPin = "";
+            refreshScreen();
+        }
+        if(stage.equals("D") || stage.equals("WS") || stage.equals("WC") || stage.equals("CB") || stage.equals("NP") || stage.equals("CP")){
+            banknotes = new int[5]; 
+            enteredPin = "";
+            newPin = "";
+            withdrawAmount = 0;
+            moneyOut = "";
+            stage = "A";
+            refreshScreen();
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_CancelActionPerformed
+
+    private void ClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearActionPerformed
+        enableButtons(false);
+        switch(stage){
+            case "P":
+                enteredPin = "";
+                refreshScreen();
+                break;
+            case "NP":
+                enteredPin = "";
+                newPin = "";
+                refreshScreen();
+                break;
+            case "WC":
+                moneyOut = "";
+                refreshScreen();
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_ClearActionPerformed
+
+    private void EnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterActionPerformed
+        enableButtons(false);
+        switch (stage){
+            case "P":
+                if(pin.equals(enteredPin)){
+                    stage = "A";
+                    refreshScreen();
+                }else{
+                    incorrectPin += 1;
+                    stage = "WP";
+                    enteredPin = "";
+                    refreshScreen();
+                }
+                break;
+            case "WP":
+                if(pin.equals(enteredPin)){
+                    stage = "A";
+                    refreshScreen();
+                }else{
+                    incorrectPin += 1;
+                    enteredPin = "";
+                    refreshScreen();
+                }
+                break;
+            case "NP":
+                if(enteredPin.length() == 4){
+                    newPin = enteredPin;
+                    enteredPin = "";
+                    refreshScreen();
+                }
+                break;
+            case "CP":
+                if(enteredPin.equals(newPin)){
+                    stage = "A";
+                    refreshScreen();
+                }else{
+            
+                }
+                break;
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_EnterActionPerformed
+
+    private void moneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moneyActionPerformed
+        enableButtons(false);
+        if(stage.equals("MO")){
+            money.setBackground(new java.awt.Color(82, 80, 82));
+            balance -= withdrawAmount;
+            withdrawAmount = 0;
+            stage = "CI";
+            refreshScreen();
+        }
+        enableButtons(true);
+    }//GEN-LAST:event_moneyActionPerformed
+
+    private void zeroZeroZeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zeroZeroZeroActionPerformed
+        if(stage.equals("WC")){
+            if(language.equals("pl")){
+                switch(moneyOut.length()){
+                    case 1:
+                        moneyOut += "0000";
+                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                        break;
+                    case 2:
+                        moneyOut += "000";
+                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                        break;
+                }
+            }else{
+//                switch(moneyOut.length()){
+//                    case 1:
+//                        moneyOut += "0000";
+//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                        break;
+//                    case 2:
+//                        moneyOut += "000";
+//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                        break;
+//                }
+            }
+        }
+    }//GEN-LAST:event_zeroZeroZeroActionPerformed
+
+    private void refreshScreen(){
+        switch(stage){
+            case "CI":
+                screen.setText("\n\n\n\n\t           Proszę włożyć kartę"/*\n\t         Please insert your card*/);
+                cardIndicator.setBackground(new java.awt.Color(0, 164, 0));
+                break;
+            case "L":
+                screen.setText("\n\t           Proszę wybrać język\n\t         Please select language\n\n\t\t\t              Polski ->");
+                break;
+            case "P":
+                if(language.equals("pl")){
+                    if (pin.length() != 5){
+                        screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      ----\n\n\n\t           Potwierdź: Akceptuj");
+                    }else{
+                        screen.setText("\n\t        Karta zablokowana\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                    }
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "A":
+                if(language.equals("pl")){
+                    screen.setText("\n\t         Wybierz rodzaj tranzakji\n\n\n<- wpłata\t\t\t           wypłata ->\n\n\n\t\t                      dostępne środki ->\n\n\n\t\t        zmiana numeru PIN karty ->");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "D":
+                if(language.equals("pl")){
+                    screen.setText("\n\t         Dostępne środki\n\n\n|||||||||1|||||||||1|||||||||1|||||||||1|||||||||1|||||||||1||||\n\n\n\t\t                      nowa transakcja ->\n\n\n\t\t        koniec transakcji ->");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "WS":
+                if(language.equals("pl")){
+                    screen.setText("\n\t         Wybierz rządaną kwotę\n\n\n<- 20 PLN\t\t\t         200 PLN ->\n\n\n<- 50 PLN\t\t\t         500 PLN ->\n\n\n<- 100 PLN\t\t\t               inna ->");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "WC":
+                if(language.equals("pl")){
+                    screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     0 PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
+
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "CB":
+                if(language.equals("pl")){
+                    screen.setText("\n\t             Dostępne środki\n\n\n");
+                    for(int i=0; i<(51-Double.toString(balance).length()); i++){
+                        screen.append(" ");
+                    }
+                    screen.append(df.format(balance) + "\n\n\n\t\t                      nowa transakcja ->\n\n\n\t\t                      koniec transakcji ->");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "NP":
+                if(language.equals("pl")){
+                    screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "CO":
+                cardIndicator.setBackground(new java.awt.Color(0, 164, 0));
+                if(language.equals("pl")){
+                    screen.setText("\n\n\n\n\t        Proszę zabrać kartę");
+                }else{
+//                    screen.setText("\n\t   Please take out your card");
+                }
+                break;
+            case "CL":
+                cardIndicator.setBackground(new java.awt.Color(0, 164, 0));
+                if(language.equals("pl")){
+                    screen.setText("\n\n\n\n\t        Karta jest zablokowana\n\t        Proszę zabrać kartę");
+                }else{
+//                    screen.setText("\n\t   Please take out your card");
+                }
+                break;
+            case "MO":
+                money.setBackground(new java.awt.Color(74, 72, 74));
+                if(language.equals("pl")){
+                    screen.setText("\n\n\n\n\t        Proszę zabrać gotówkę\n\n\n                        "+banknotes[0]+"x500, "+banknotes[1]+"x200, "+banknotes[2]+"x100, "+banknotes[3]+"x50, "+banknotes[4]+"x20, ");
+                }else{  
+//                    screen.setText("\n\n\n\n\t Please take out your money");
+                }
+                break;
+            
+        }
+    }
+    
+    private void enableButtons(boolean state){
+        LT.setEnabled(state);
+        LMT.setEnabled(state);
+        LMB.setEnabled(state);
+        LB.setEnabled(state);
+        RT.setEnabled(state);
+        RMT.setEnabled(state);
+        RMB.setEnabled(state);
+        RB.setEnabled(state);
+        cardIndicator.setEnabled(state);
+        one.setEnabled(state);
+        two.setEnabled(state);
+        three.setEnabled(state);
+        four.setEnabled(state);
+        five.setEnabled(state);
+        six.setEnabled(state);
+        seven.setEnabled(state);
+        eight.setEnabled(state);
+        nine.setEnabled(state);
+        zero.setEnabled(state);
+        Cancel.setEnabled(state);
+        Clear.setEnabled(state);
+        Enter.setEnabled(state);
+        zeroZeroZero.setEnabled(state);
+        money.setEnabled(state);
+        unknownSmall.setEnabled(state);
+        unknownLarge.setEnabled(state);
+    }
+    
+    private int[] moneycount(int withdrawAmount){
+        while (withdrawAmount != 0){
+            if(withdrawAmount - 500 >= 0){
+                withdrawAmount -= 500;
+                banknotes[0] +=1;
+            }else if(withdrawAmount - 200 >= 0){
+                withdrawAmount -= 200;
+                banknotes[1] +=1;
+            }else if(withdrawAmount - 100 >= 0){
+                withdrawAmount -= 100;
+                banknotes[2] +=1;
+            }else if(withdrawAmount - 50 >= 0){
+                withdrawAmount -= 50;
+                banknotes[3] +=1;
+            }else{
+                withdrawAmount -= 20;
+                banknotes[4] +=1;
+            }
+        }
+        return banknotes;
+    }
     /**
      * @param args the command line arguments
      */
@@ -159,12 +2861,39 @@ public class Bankomat extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton Cancel;
+    private javax.swing.JButton Clear;
+    private javax.swing.JButton Enter;
+    private javax.swing.JButton LB;
+    private javax.swing.JButton LMB;
+    private javax.swing.JButton LMT;
+    private javax.swing.JButton LT;
+    private javax.swing.JButton RB;
+    private javax.swing.JButton RMB;
+    private javax.swing.JButton RMT;
+    private javax.swing.JButton RT;
+    private javax.swing.JPanel body;
+    private javax.swing.JPanel cardIndicator;
+    private javax.swing.JButton cardReader;
+    private javax.swing.JButton eight;
+    private javax.swing.JButton five;
+    private javax.swing.JButton four;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton money;
+    private javax.swing.JPanel moneyDeposit;
+    private javax.swing.JButton nine;
+    private javax.swing.JPanel numberPad;
+    private javax.swing.JButton one;
+    private javax.swing.JTextArea screen;
+    private javax.swing.JPanel screenHolder;
+    private javax.swing.JButton seven;
+    private javax.swing.JButton six;
+    private javax.swing.JButton three;
+    private javax.swing.JButton two;
+    private javax.swing.JButton unknownLarge;
+    private javax.swing.JButton unknownSmall;
+    private javax.swing.JButton zero;
+    private javax.swing.JButton zeroZeroZero;
     // End of variables declaration//GEN-END:variables
 }
