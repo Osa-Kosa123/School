@@ -17,27 +17,35 @@ public class Bankomat extends javax.swing.JFrame {
     /**
      * Creates new form Bankomat
      */
+    String[][] cards = {{"958", "7564", "7455.85", "notLocked"}, {"510", "4784", "7021.75", "notLocked"}, {"877", "4959", "7274.97", "notLocked"}};
     DecimalFormat df = new DecimalFormat("0.00");
     double balance = 8000.00;
     int[] banknotes = new int[4];
+    int selectedCard;
     String pin = "1164";
     String enteredPin = "";
     String newPin = "";
+    int incorrectPin = 0;
+    boolean locked = false;
     boolean cardIn = false;
     int withdrawAmount = 0;
     String moneyOut = "";
     String language = "pl";
     String stage = "CI";
+//    CC - choose card
 //\    CI - card input
+//    CL - card locked
 //\    L  - choose language
 //    P  - PIN
+//    WP - wrong PIN
 //    A  - action (deposit, withdraw, current balance, change PIN)
 //    D  - deposit
 //    WS - withdraw set ammount
 //    WC - withdraw custom ammount
 //\    CB - current balance
-//    NP - change PIN
+//\    NP - change PIN
 //    CP - confirm new PIN
+//    WNP - wrong new PIN
 //\    CO - card output
 //\    MO - money output
     
@@ -729,9 +737,13 @@ public class Bankomat extends javax.swing.JFrame {
         if(stage.equals("CI") && cardIn == false){
             cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
             cardIn = true;
-            stage = "L";
+            if (!locked){
+                stage = "L";
+            }else{
+                stage = "CL";
+            }
             refreshScreen();
-        }else if(stage.equals("CO") && cardIn == true){
+        }else if((stage.equals("CO") || stage.equals("CL")) && cardIn == true){
             cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
             cardIn = false;
             if(withdrawAmount != 0){
@@ -756,15 +768,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "1";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "1";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "1";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "1";
@@ -775,15 +787,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "1";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "1";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "1";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "1";
@@ -792,20 +804,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "1";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "1";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "1";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "1";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "1";
@@ -819,15 +868,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "1";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "1";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "1";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "1";
@@ -897,15 +946,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "2";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "2";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "2";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "2";
@@ -916,15 +965,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "2";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "2";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "2";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "2";
@@ -933,20 +982,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "2";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "2";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "2";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "2";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "2";
@@ -960,15 +1046,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "2";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "2";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "2";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "2";
@@ -1038,15 +1124,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "3";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "3";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "3";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "3";
@@ -1057,15 +1143,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "3";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "3";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "3";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "3";
@@ -1074,20 +1160,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "3";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "3";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "3";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "3";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "3";
@@ -1096,20 +1219,20 @@ public class Bankomat extends javax.swing.JFrame {
                     }
                 }
                 break;
-            case "NP":
+            case "CP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "3";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "3";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "3";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "3";
@@ -1179,15 +1302,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "4";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "4";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "4";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "4";
@@ -1198,15 +1321,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "4";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "4";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "4";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "4";
@@ -1215,20 +1338,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "4";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "4";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "4";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "4";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "4";
@@ -1237,20 +1397,20 @@ public class Bankomat extends javax.swing.JFrame {
                     }
                 }
                 break;
-            case "NP":
+            case "CP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "4";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "4";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "4";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "4";
@@ -1320,15 +1480,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "5";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "5";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "5";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "5";
@@ -1339,15 +1499,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "5";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "5";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "5";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "5";
@@ -1356,20 +1516,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "5";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "5";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "5";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "5";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "5";
@@ -1378,20 +1575,20 @@ public class Bankomat extends javax.swing.JFrame {
                     }
                 }
                 break;
-            case "NP":
+            case "CP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "5";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "5";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "5";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "5";
@@ -1461,15 +1658,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "6";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "6";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "6";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "6";
@@ -1480,15 +1677,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "6";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "6";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "6";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "6";
@@ -1497,20 +1694,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "6";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "6";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "6";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "6";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "6";
@@ -1524,15 +1758,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "6";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "6";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "6";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "6";
@@ -1602,15 +1836,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "7";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "7";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "7";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "7";
@@ -1621,15 +1855,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "7";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "7";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "7";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "7";
@@ -1638,20 +1872,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "7";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "7";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "7";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "7";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "7";
@@ -1665,15 +1936,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "7";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "7";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "7";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "7";
@@ -1743,15 +2014,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "8";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "8";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "8";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "8";
@@ -1762,15 +2033,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "8";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "8";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "8";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "8";
@@ -1779,20 +2050,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "8";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "8";
@@ -1806,15 +2114,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "8";
@@ -1884,15 +2192,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "9";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "9";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "9";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "9";
@@ -1903,15 +2211,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "9";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "9";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "9";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "9";
@@ -1920,20 +2228,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "9";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "9";
@@ -1947,15 +2292,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "9";
@@ -2025,15 +2370,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "0";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "0";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "0";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "0";
@@ -2044,15 +2389,15 @@ public class Bankomat extends javax.swing.JFrame {
 //                    switch(enteredPin.length()){
 //                        case 0:
 //                            enteredPin += "0";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      X---\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 1:
 //                            enteredPin += "0";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XX--\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 2:
 //                            enteredPin += "0";
-//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX\n\n\n\t               Confirm: Enter");
+//                            screen.setText("\n\t       PLEASE ENTER YOUR PIN\n\n\n\n\n\t                      XXX-\n\n\n\t               Confirm: Enter");
 //                            break;
 //                        case 3:
 //                            enteredPin += "0";
@@ -2061,20 +2406,57 @@ public class Bankomat extends javax.swing.JFrame {
 //                    }
                 }
                 break;
+            case "WP":
+                if(language.equals("pl")){
+                    switch(enteredPin.length()){
+                        case 0:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            break;
+                        case 1:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            break;
+                        case 2:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            break;
+                        case 3:
+                            enteredPin += "0";
+                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            break;
+                    }
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
             case "NP":
                 if(language.equals("pl")){
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "0";
@@ -2088,15 +2470,15 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "0";
@@ -2164,6 +2546,7 @@ public class Bankomat extends javax.swing.JFrame {
             withdrawAmount = 0;
             moneyOut = "";
             stage = "A";
+            refreshScreen();
         }
         enableButtons(true);
     }//GEN-LAST:event_CancelActionPerformed
@@ -2190,13 +2573,43 @@ public class Bankomat extends javax.swing.JFrame {
 
     private void EnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterActionPerformed
         enableButtons(false);
-        if(stage.equals("P")){
-            if(pin.equals(enteredPin)){
-                stage = "A";
-                refreshScreen();
-            }else{
+        switch (stage){
+            case "P":
+                if(pin.equals(enteredPin)){
+                    stage = "A";
+                    refreshScreen();
+                }else{
+                    incorrectPin += 1;
+                    stage = "WP";
+                    enteredPin = "";
+                    refreshScreen();
+                }
+                break;
+            case "WP":
+                if(pin.equals(enteredPin)){
+                    stage = "A";
+                    refreshScreen();
+                }else{
+                    incorrectPin += 1;
+                    enteredPin = "";
+                    refreshScreen();
+                }
+                break;
+            case "NP":
+                if(enteredPin.length() == 4){
+                    newPin = enteredPin;
+                    enteredPin = "";
+                    refreshScreen();
+                }
+                break;
+            case "CP":
+                if(enteredPin.equals(newPin)){
+                    stage = "A";
+                    refreshScreen();
+                }else{
             
-            }
+                }
+                break;
         }
         enableButtons(true);
     }//GEN-LAST:event_EnterActionPerformed
@@ -2252,7 +2665,30 @@ public class Bankomat extends javax.swing.JFrame {
                 break;
             case "P":
                 if(language.equals("pl")){
-                    screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                    if (pin.length() != 5){
+                        screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      ----\n\n\n\t           Potwierdź: Akceptuj");
+                    }else{
+                        screen.setText("\n\t        Karta zablokowana\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                    }
+                }else{
+//                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
+                }
+                break;
+            case "WP":
+                if(language.equals("pl")){
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    switch(incorrectPin){
+                        case 1:
+                            screen.append("Pozostały 3 próby");
+                            break;
+                        case 2:
+                            screen.append("Pozostały 2 próby");
+                            break;
+                        case 3:
+                            screen.append("Pozostała 1 próba");
+                            break;
+                    }
+                    screen.append("\n\t           Potwierdź: Akceptuj");
                 }else{
 //                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
                 }
@@ -2280,7 +2716,7 @@ public class Bankomat extends javax.swing.JFrame {
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    screen.setText("\n\t    Wprowadź ;kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     0 PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
+                    screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     0 PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
 
                 }else{
 //                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
@@ -2299,7 +2735,14 @@ public class Bankomat extends javax.swing.JFrame {
                 break;
             case "NP":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Wpisz nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                    screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "CP":
+                if(language.equals("pl")){
+                    screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
                 }else{
 //                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
@@ -2308,6 +2751,14 @@ public class Bankomat extends javax.swing.JFrame {
                 cardIndicator.setBackground(new java.awt.Color(0, 164, 0));
                 if(language.equals("pl")){
                     screen.setText("\n\n\n\n\t        Proszę zabrać kartę");
+                }else{
+//                    screen.setText("\n\t   Please take out your card");
+                }
+                break;
+            case "CL":
+                cardIndicator.setBackground(new java.awt.Color(0, 164, 0));
+                if(language.equals("pl")){
+                    screen.setText("\n\n\n\n\t        Karta jest zablokowana\n\t        Proszę zabrać kartę");
                 }else{
 //                    screen.setText("\n\t   Please take out your card");
                 }
