@@ -17,41 +17,53 @@ public class Bankomat extends javax.swing.JFrame {
     /**
      * Creates new form Bankomat
      */
-    String[][] cards = {{"958", "7564", "7455.85", "notLocked"}, {"510", "4784", "7021.75", "notLocked"}, {"877", "4959", "7274.97", "notLocked"}};
+    String[][] cards = {{"958", "7564", "7455.85", "false"}, {"510", "4784", "7021.75", "false"}, {"877", "4959", "7274.97", "false"}};
+    int selectedcard;
     DecimalFormat df = new DecimalFormat("0.00");
-    double balance = 8000.00;
-    int[] banknotes = new int[4];
-    int selectedCard;
-    String pin = "1164";
+    double balance = 0.00;
+    int[] banknotes = new int[5];
+    String pin = "";
     String enteredPin = "";
     String newPin = "";
     int incorrectPin = 0;
     boolean locked = false;
     boolean cardIn = false;
     int withdrawAmount = 0;
-    String moneyOut = "";
+    String money = "";
     String language = "pl";
     String stage = "CI";
-//    CC - choose card
+//\    CC - choose card
 //\    CI - card input
-//    CL - card locked
+//\    CL - card locked
 //\    L  - choose language
-//    P  - PIN
-//    WP - wrong PIN
-//    A  - action (deposit, withdraw, current balance, change PIN)
-//    D  - deposit
-//    WS - withdraw set ammount
-//    WC - withdraw custom ammount
+//\    P  - PIN
+//\    WP - wrong PIN
+//    PO - confirmation
+//\    A  - action (deposit, withdraw, current balance, change PIN)
+//    DD  - deposit declaration
+//    MI - money input
+//    MC - money count
+//\    WS - withdraw set ammount
+//\    WC - withdraw custom ammount
 //\    CB - current balance
 //\    NP - change PIN
-//    CP - confirm new PIN
-//    WNP - wrong new PIN
+//\    CP - confirm new PIN
+//\    C - continue?
 //\    CO - card output
 //\    MO - money output
     
     public Bankomat() {
         initComponents();
         refreshScreen();
+        card1.setVisible(false);
+        card2.setVisible(false);
+        card3.setVisible(false);
+        banknote500.setVisible(false);
+        banknote200.setVisible(false);
+        banknote100.setVisible(false);
+        banknote50.setVisible(false);
+        banknote20.setVisible(false);
+        banknote10.setVisible(false);
     }
 
     /**
@@ -65,7 +77,7 @@ public class Bankomat extends javax.swing.JFrame {
 
         body = new javax.swing.JPanel();
         moneyDeposit = new javax.swing.JPanel();
-        money = new javax.swing.JButton();
+        moneySlot = new javax.swing.JButton();
         cardIndicator = new javax.swing.JPanel();
         cardReader = new javax.swing.JButton();
         numberPad = new javax.swing.JPanel();
@@ -97,6 +109,17 @@ public class Bankomat extends javax.swing.JFrame {
         RMB = new javax.swing.JButton();
         RMT = new javax.swing.JButton();
         RT = new javax.swing.JButton();
+        cardSelect = new javax.swing.JPanel();
+        card1 = new javax.swing.JButton();
+        card2 = new javax.swing.JButton();
+        card3 = new javax.swing.JButton();
+        banknoteSelect = new javax.swing.JPanel();
+        banknote500 = new javax.swing.JButton();
+        banknote200 = new javax.swing.JButton();
+        banknote100 = new javax.swing.JButton();
+        banknote50 = new javax.swing.JButton();
+        banknote20 = new javax.swing.JButton();
+        banknote10 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,11 +128,11 @@ public class Bankomat extends javax.swing.JFrame {
 
         moneyDeposit.setBackground(new java.awt.Color(8, 8, 8));
 
-        money.setBackground(new java.awt.Color(82, 80, 82));
-        money.setPreferredSize(new java.awt.Dimension(314, 47));
-        money.addActionListener(new java.awt.event.ActionListener() {
+        moneySlot.setBackground(new java.awt.Color(82, 80, 82));
+        moneySlot.setPreferredSize(new java.awt.Dimension(314, 47));
+        moneySlot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                moneyActionPerformed(evt);
+                moneySlotActionPerformed(evt);
             }
         });
 
@@ -119,14 +142,14 @@ public class Bankomat extends javax.swing.JFrame {
             moneyDepositLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(moneyDepositLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(money, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(moneySlot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
         moneyDepositLayout.setVerticalGroup(
             moneyDepositLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, moneyDepositLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(money, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(moneySlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -161,7 +184,7 @@ public class Bankomat extends javax.swing.JFrame {
         two.setBackground(new java.awt.Color(124, 124, 124));
         two.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         two.setForeground(new java.awt.Color(69, 69, 69));
-        two.setText("2");
+        two.setIcon(new javax.swing.ImageIcon(getClass().getResource("/2.png"))); // NOI18N
         two.setPreferredSize(new java.awt.Dimension(48, 48));
         two.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -172,7 +195,7 @@ public class Bankomat extends javax.swing.JFrame {
         one.setBackground(new java.awt.Color(124, 124, 124));
         one.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         one.setForeground(new java.awt.Color(69, 69, 69));
-        one.setText("1");
+        one.setIcon(new javax.swing.ImageIcon(getClass().getResource("/1.png"))); // NOI18N
         one.setPreferredSize(new java.awt.Dimension(48, 48));
         one.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -183,7 +206,7 @@ public class Bankomat extends javax.swing.JFrame {
         three.setBackground(new java.awt.Color(124, 124, 124));
         three.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         three.setForeground(new java.awt.Color(69, 69, 69));
-        three.setText("3");
+        three.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3.png"))); // NOI18N
         three.setPreferredSize(new java.awt.Dimension(48, 48));
         three.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,7 +217,7 @@ public class Bankomat extends javax.swing.JFrame {
         five.setBackground(new java.awt.Color(124, 124, 124));
         five.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         five.setForeground(new java.awt.Color(69, 69, 69));
-        five.setText("5");
+        five.setIcon(new javax.swing.ImageIcon(getClass().getResource("/5.png"))); // NOI18N
         five.setPreferredSize(new java.awt.Dimension(48, 48));
         five.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -205,7 +228,7 @@ public class Bankomat extends javax.swing.JFrame {
         four.setBackground(new java.awt.Color(124, 124, 124));
         four.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         four.setForeground(new java.awt.Color(69, 69, 69));
-        four.setText("4");
+        four.setIcon(new javax.swing.ImageIcon(getClass().getResource("/4.png"))); // NOI18N
         four.setPreferredSize(new java.awt.Dimension(48, 48));
         four.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,7 +239,7 @@ public class Bankomat extends javax.swing.JFrame {
         six.setBackground(new java.awt.Color(124, 124, 124));
         six.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         six.setForeground(new java.awt.Color(69, 69, 69));
-        six.setText("6");
+        six.setIcon(new javax.swing.ImageIcon(getClass().getResource("/6.png"))); // NOI18N
         six.setPreferredSize(new java.awt.Dimension(48, 48));
         six.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -226,7 +249,7 @@ public class Bankomat extends javax.swing.JFrame {
 
         zeroZeroZero.setBackground(new java.awt.Color(124, 124, 124));
         zeroZeroZero.setForeground(new java.awt.Color(69, 69, 69));
-        zeroZeroZero.setText("000");
+        zeroZeroZero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/000.png"))); // NOI18N
         zeroZeroZero.setPreferredSize(new java.awt.Dimension(48, 48));
         zeroZeroZero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -237,7 +260,7 @@ public class Bankomat extends javax.swing.JFrame {
         zero.setBackground(new java.awt.Color(124, 124, 124));
         zero.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         zero.setForeground(new java.awt.Color(69, 69, 69));
-        zero.setText("0");
+        zero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/0.png"))); // NOI18N
         zero.setPreferredSize(new java.awt.Dimension(48, 48));
         zero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,7 +274,7 @@ public class Bankomat extends javax.swing.JFrame {
         seven.setBackground(new java.awt.Color(124, 124, 124));
         seven.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         seven.setForeground(new java.awt.Color(69, 69, 69));
-        seven.setText("7");
+        seven.setIcon(new javax.swing.ImageIcon(getClass().getResource("/7.png"))); // NOI18N
         seven.setPreferredSize(new java.awt.Dimension(48, 48));
         seven.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -262,7 +285,7 @@ public class Bankomat extends javax.swing.JFrame {
         eight.setBackground(new java.awt.Color(124, 124, 124));
         eight.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         eight.setForeground(new java.awt.Color(69, 69, 69));
-        eight.setText("8");
+        eight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/8.png"))); // NOI18N
         eight.setPreferredSize(new java.awt.Dimension(48, 48));
         eight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -273,7 +296,7 @@ public class Bankomat extends javax.swing.JFrame {
         nine.setBackground(new java.awt.Color(124, 124, 124));
         nine.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         nine.setForeground(new java.awt.Color(69, 69, 69));
-        nine.setText("9");
+        nine.setIcon(new javax.swing.ImageIcon(getClass().getResource("/9.png"))); // NOI18N
         nine.setPreferredSize(new java.awt.Dimension(48, 48));
         nine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -345,7 +368,7 @@ public class Bankomat extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(nine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Enter, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(Enter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(numberPadLayout.createSequentialGroup()
                                 .addComponent(zero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -414,6 +437,7 @@ public class Bankomat extends javax.swing.JFrame {
             }
         });
 
+        screen.setEditable(false);
         screen.setBackground(new java.awt.Color(96, 96, 96));
         screen.setColumns(20);
         screen.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -535,6 +559,112 @@ public class Bankomat extends javax.swing.JFrame {
                 .addGap(21, 21, 21))
         );
 
+        cardSelect.setBackground(new java.awt.Color(169, 169, 169));
+        cardSelect.setPreferredSize(new java.awt.Dimension(220, 35));
+
+        card1.setText("958");
+        card1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                card1ActionPerformed(evt);
+            }
+        });
+
+        card2.setText("510");
+        card2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                card2ActionPerformed(evt);
+            }
+        });
+
+        card3.setText("877");
+        card3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                card3ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cardSelectLayout = new javax.swing.GroupLayout(cardSelect);
+        cardSelect.setLayout(cardSelectLayout);
+        cardSelectLayout.setHorizontalGroup(
+            cardSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardSelectLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
+        );
+        cardSelectLayout.setVerticalGroup(
+            cardSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardSelectLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(cardSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(card1)
+                    .addComponent(card2)
+                    .addComponent(card3))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        banknoteSelect.setBackground(new java.awt.Color(169, 169, 169));
+        banknoteSelect.setPreferredSize(new java.awt.Dimension(356, 44));
+
+        banknote500.setText("500");
+        banknote500.setPreferredSize(new java.awt.Dimension(64, 32));
+
+        banknote200.setText("200");
+        banknote200.setPreferredSize(new java.awt.Dimension(64, 32));
+
+        banknote100.setText("100");
+        banknote100.setPreferredSize(new java.awt.Dimension(64, 32));
+
+        banknote50.setText("50");
+        banknote50.setPreferredSize(new java.awt.Dimension(64, 32));
+
+        banknote20.setText("20");
+        banknote20.setPreferredSize(new java.awt.Dimension(64, 32));
+
+        banknote10.setText("10");
+        banknote10.setPreferredSize(new java.awt.Dimension(64, 32));
+
+        javax.swing.GroupLayout banknoteSelectLayout = new javax.swing.GroupLayout(banknoteSelect);
+        banknoteSelect.setLayout(banknoteSelectLayout);
+        banknoteSelectLayout.setHorizontalGroup(
+            banknoteSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(banknoteSelectLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(banknoteSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(banknoteSelectLayout.createSequentialGroup()
+                        .addComponent(banknote500, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(banknote200, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(banknote100, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(banknoteSelectLayout.createSequentialGroup()
+                        .addComponent(banknote50, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(banknote20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(banknote10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        banknoteSelectLayout.setVerticalGroup(
+            banknoteSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(banknoteSelectLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(banknoteSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(banknote500, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(banknote200, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(banknote100, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(banknoteSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(banknote50, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(banknote20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(banknote10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout bodyLayout = new javax.swing.GroupLayout(body);
         body.setLayout(bodyLayout);
         bodyLayout.setHorizontalGroup(
@@ -542,34 +672,48 @@ public class Bankomat extends javax.swing.JFrame {
             .addGroup(bodyLayout.createSequentialGroup()
                 .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(bodyLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(bodyLayout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addComponent(cardIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(bodyLayout.createSequentialGroup()
+                                .addGap(32, 32, 32)
+                                .addComponent(cardSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(bodyLayout.createSequentialGroup()
                         .addGap(216, 216, 216)
                         .addComponent(numberPad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(95, 95, 95)
-                        .addComponent(moneyDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(bodyLayout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52)
-                        .addComponent(cardIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(161, 161, 161))
+                        .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(moneyDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(bodyLayout.createSequentialGroup()
+                                .addGap(72, 72, 72)
+                                .addComponent(banknoteSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(161, Short.MAX_VALUE))
         );
         bodyLayout.setVerticalGroup(
             bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyLayout.createSequentialGroup()
                 .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(bodyLayout.createSequentialGroup()
-                        .addGap(273, 273, 273)
-                        .addComponent(cardIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(bodyLayout.createSequentialGroup()
                         .addGap(90, 90, 90)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(64, 64, 64)
-                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(numberPad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bodyLayout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addGap(273, 273, 273)
+                        .addComponent(cardIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cardSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(71, 71, 71)
+                .addGroup(bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(bodyLayout.createSequentialGroup()
+                        .addComponent(numberPad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(91, 91, 91))
+                    .addGroup(bodyLayout.createSequentialGroup()
                         .addComponent(moneyDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)))
-                .addGap(91, 91, 91))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(banknoteSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(47, 47, 47))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -585,7 +729,7 @@ public class Bankomat extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(body, 754, 754, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -598,6 +742,10 @@ public class Bankomat extends javax.swing.JFrame {
 //            case "L":
 //                language = "en";
 //                stage = "P";
+//                refreshScreen();
+//                break;
+//            case "A":
+//                stage = "DD";
 //                refreshScreen();
 //                break;
             case "WS":
@@ -655,20 +803,22 @@ public class Bankomat extends javax.swing.JFrame {
                 }
                 break;
             case "WC":
-                if(moneyOut.equals("") || !moneyOut.endsWith("0") || moneyOut.endsWith("10") || moneyOut.endsWith("30")){
+                if(money.equals("") || !money.endsWith("0") || money.endsWith("10") || money.endsWith("30")){
                     if(language.equals("pl")){
-                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     nie można wypłacić podanej kwoty");
+                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\tnie można wypłacić podanej kwoty");
                     }else{
 //                        screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     couldn't withdraw given ammount");
                     }
+                    money = "";
                 }else{
-                    withdrawAmount = Integer.parseInt(moneyOut);
+                    withdrawAmount = Integer.parseInt(money);
                     if(withdrawAmount > 1000){
                         if(language.equals("pl")){
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     kwota nie moźe przekraczać 1000 PLN");
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\tkwota nie moźe przekraczać 1000 PLN");
                         }else{
 //                            screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     can't withdraw more than 1000 PLN");
                         }
+                        money = "";
                     }else{
                         if(withdrawAmount > balance){
                             if(language.equals("pl")){
@@ -684,6 +834,11 @@ public class Bankomat extends javax.swing.JFrame {
                     }    
                 }
                 break;
+            case "C":
+                enteredPin = "";
+                stage = "L";
+                refreshScreen();
+                break;
         }
         enableButtons(true);
     }//GEN-LAST:event_RMTActionPerformed
@@ -691,6 +846,10 @@ public class Bankomat extends javax.swing.JFrame {
     private void RMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RMBActionPerformed
         enableButtons(false);
         switch(stage){
+            case "PO":
+                stage = "A";
+                refreshScreen();
+                break;
             case "A":
                 stage = "CB";
                 refreshScreen();
@@ -708,6 +867,18 @@ public class Bankomat extends javax.swing.JFrame {
                         refreshScreen();
                 }
                 break;
+            case "WC":
+                money = "";
+                refreshScreen();
+                break;
+            case "DD":
+                money = "";
+                refreshScreen();
+                break;
+            case "C":
+                stage = "CO";
+                refreshScreen();
+                break;
         }
         enableButtons(true);
     }//GEN-LAST:event_RMBActionPerformed
@@ -715,6 +886,10 @@ public class Bankomat extends javax.swing.JFrame {
     private void RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBActionPerformed
         enableButtons(false);
         switch (stage){
+            case "PO":
+                stage = "CO";
+                refreshScreen();
+                break;
             case "A":
                 enteredPin = "";
                 stage = "NP";
@@ -735,14 +910,9 @@ public class Bankomat extends javax.swing.JFrame {
     private void cardReaderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cardReaderActionPerformed
         enableButtons(false);
         if(stage.equals("CI") && cardIn == false){
-            cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
-            cardIn = true;
-            if (!locked){
-                stage = "L";
-            }else{
-                stage = "CL";
-            }
-            refreshScreen();
+            card1.setVisible(true);
+            card2.setVisible(true);
+            card3.setVisible(true);
         }else if((stage.equals("CO") || stage.equals("CL")) && cardIn == true){
             cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
             cardIn = false;
@@ -750,12 +920,16 @@ public class Bankomat extends javax.swing.JFrame {
                 stage = "MO";
                 refreshScreen();
             }else{
+                cards[selectedcard][1] = pin;
+                cards[selectedcard][2] = balance + "";
+                cards[selectedcard][3] = locked + "";
                 stage = "CI";
                 refreshScreen();
             }
             enteredPin = "";
-            moneyOut = "";
+            money = "";
             language = "pl";
+            incorrectPin = 0;
         }
         enableButtons(true);
     }//GEN-LAST:event_cardReaderActionPerformed
@@ -809,22 +983,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "1";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "1";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "1";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "1";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -868,70 +1041,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "1";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "1";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "1";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "1";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "1";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "1";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "1";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "1";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "1";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "1";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "1";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
 //                            break;
 //                        case 1:
-//                            moneyOut += "1";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
 //                            break;
 //                        case 2:
-//                            moneyOut += "1";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
 //                            break;
 //                        case 3:
-//                            moneyOut += "1";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
 //                            break;
 //                        case 4:
-//                            moneyOut += "1";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "1";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
 //                            break;
 //                    }
+                }
+                break;
+                case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "1";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "1";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "1";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "1";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "1";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -987,22 +1186,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "2";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "2";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "2";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "2";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -1046,70 +1244,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "2";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "2";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "2";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "2";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "2";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "2";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "2";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "2";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "2";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "2";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "2";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "2";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "2";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "2";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "2";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "2";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "2";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "2";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "2";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "2";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "2";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -1165,22 +1389,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "3";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "3";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "3";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "3";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -1224,70 +1447,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "3";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "3";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "3";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "3";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "3";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "3";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "3";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "3";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "3";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "3";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "3";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "3";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "3";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "3";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "3";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "3";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "3";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "3";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "3";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "3";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "3";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -1343,22 +1592,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "4";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "4";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "4";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "4";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -1402,70 +1650,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "4";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "4";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "4";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "4";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "4";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "4";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "4";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "4";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "4";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "4";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "4";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "4";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "4";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "4";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "4";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "4";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "4";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "4";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "4";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "4";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "4";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -1521,22 +1795,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "5";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "5";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "5";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "5";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -1580,70 +1853,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "5";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "5";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "5";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "5";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "5";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "5";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "5";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "5";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "5";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "5";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "5";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "5";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "5";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "5";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "5";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "5";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "5";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "5";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "5";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "5";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "5";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -1699,22 +1998,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "6";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "6";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "6";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "6";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -1758,70 +2056,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "6";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "6";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "6";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "6";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "6";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "6";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "6";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "6";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "6";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "6";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "6";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "6";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "6";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "6";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "6";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "6";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "6";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "6";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "6";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "6";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "6";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -1877,22 +2201,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "7";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "7";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "7";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "7";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -1936,70 +2259,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "7";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "7";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "7";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "7";
-                            screen.setText("\n\t            Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "7";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "7";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "7";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "7";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "7";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "7";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "7";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "7";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "7";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "7";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "7";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "7";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "7";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "7";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "7";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "7";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "7";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -2055,22 +2404,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "8";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "8";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "8";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "8";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -2114,70 +2462,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "8";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "8";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "8";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "8";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "8";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "8";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "8";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "8";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "8";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "8";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "8";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "8";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "8";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "8";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "8";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "8";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "8";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "8";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -2233,22 +2607,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "9";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "9";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "9";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "9";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -2292,70 +2665,96 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "9";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 0:
-                            moneyOut += "9";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+moneyOut+" PLN");
+                            money += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 1:
-                            moneyOut += "9";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "9";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "9";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "9";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "9";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 0:
-//                            moneyOut += "9";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+moneyOut+" PLN");
+//                            money += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                     "+money+" PLN");
 //                            break;
 //                        case 1:
-//                            moneyOut += "9";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "9";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "9";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "9";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "9";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
+                }
+                break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 0:
+                            money += "9";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 1:
+                            money += "9";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "9";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "9";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "9";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
                 }
                 break;
         }
@@ -2411,22 +2810,21 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "0";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      X---");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      X---\n\t           ");
                             break;
                         case 1:
                             enteredPin += "0";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XX--");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XX--\n\t           ");
                             break;
                         case 2:
                             enteredPin += "0";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXX-");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXX-\n\t           ");
                             break;
                         case 3:
                             enteredPin += "0";
-                            screen.setText("\n\t        Proszę wprowadzić PIN\n\n\n\n\n\t                      XXXX");
+                            screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      XXXX\n\t           ");
                             break;
                     }
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -2470,81 +2868,108 @@ public class Bankomat extends javax.swing.JFrame {
                     switch(enteredPin.length()){
                         case 0:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      X---\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 1:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XX--\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 2:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXX-\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                         case 3:
                             enteredPin += "0";
-                            screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
+                            screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      XXXX\n\n\n\t           Potwierdź: Akceptuj");
                             break;
                     }
                 }
                 break;
             case "WC":
                 if(language.equals("pl")){
-                    switch(moneyOut.length()){
+                    switch(money.length()){
                         case 1:
-                            moneyOut += "0";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+moneyOut+" PLN");
+                            money += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                    "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 2:
-                            moneyOut += "0";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+moneyOut+" PLN");
+                            money += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                   "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 3:
-                            moneyOut += "0";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+moneyOut+" PLN");
+                            money += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                  "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                         case 4:
-                            moneyOut += "0";
-                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                            money += "0";
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                             break;
                     }
                 }else{
-//                    switch(moneyOut.length()){
+//                    switch(money.length()){
 //                        case 1:
-//                            moneyOut += "0";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+moneyOut+" PLN");
+//                            money += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                    "+money+" PLN");
 //                            break;
 //                        case 2:
-//                            moneyOut += "0";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+moneyOut+" PLN");
+//                            money += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                   "+money+" PLN");
 //                            break;
 //                        case 3:
-//                            moneyOut += "0";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+moneyOut+" PLN");
+//                            money += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                  "+money+" PLN");
 //                            break;
 //                        case 4:
-//                            moneyOut += "0";
-//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                            money += "0";
+//                            screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                            break;
 //                    }
                 }
                 break;
+            case "DD":
+                if(language.equals("pl")){
+                    switch(money.length()){
+                        case 1:
+                            money += "0";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                    "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 2:
+                            money += "0";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                   "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 3:
+                            money += "0";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                  "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                        case 4:
+                            money += "0";
+                            screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                 "+money+" PLN\n\t\t\t       potwierdź ->\n\n\n\t\t\t   niepoprawna ->");
+                            break;
+                    }
+                }
+                break;
+            
         }
         enableButtons(true);
     }//GEN-LAST:event_zeroActionPerformed
 
     private void CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelActionPerformed
         enableButtons(false);
-        if(stage.equals("P")){
-            enteredPin = "";
-            newPin = "";
-            refreshScreen();
-        }
-        if(stage.equals("D") || stage.equals("WS") || stage.equals("WC") || stage.equals("CB") || stage.equals("NP") || stage.equals("CP")){
+        if(stage.equals("P") || stage.equals("WP") || stage.equals("A") || stage.equals("PO")){
             banknotes = new int[5]; 
             enteredPin = "";
             newPin = "";
             withdrawAmount = 0;
-            moneyOut = "";
+            money = "";
+            stage = "CO";
+            refreshScreen();
+        }
+        if(stage.equals("WS") || stage.equals("WC") || stage.equals("CB") || stage.equals("NP") || stage.equals("CP") || stage.equals("DD")){
+            banknotes = new int[5]; 
+            enteredPin = "";
+            newPin = "";
+            withdrawAmount = 0;
+            money = "";
             stage = "A";
             refreshScreen();
         }
@@ -2558,13 +2983,25 @@ public class Bankomat extends javax.swing.JFrame {
                 enteredPin = "";
                 refreshScreen();
                 break;
+            case "WP":
+                enteredPin = "";
+                refreshScreen();
+                break;
             case "NP":
                 enteredPin = "";
                 newPin = "";
                 refreshScreen();
                 break;
+            case "CP":
+                enteredPin = "";
+                refreshScreen();
+                break;
             case "WC":
-                moneyOut = "";
+                money = "";
+                refreshScreen();
+                break;
+            case "DD":
+                money = "";
                 refreshScreen();
                 break;
         }
@@ -2575,84 +3012,207 @@ public class Bankomat extends javax.swing.JFrame {
         enableButtons(false);
         switch (stage){
             case "P":
-                if(pin.equals(enteredPin)){
-                    stage = "A";
-                    refreshScreen();
+                if(!locked){
+                    if(pin.equals(enteredPin)){
+                        stage = "PO";
+                        refreshScreen();
+                    }else{
+                        incorrectPin += 1;
+                        stage = "WP";
+                        enteredPin = "";
+                        refreshScreen();
+                    }
                 }else{
-                    incorrectPin += 1;
-                    stage = "WP";
-                    enteredPin = "";
+                    stage = "CL";
                     refreshScreen();
                 }
                 break;
             case "WP":
                 if(pin.equals(enteredPin)){
-                    stage = "A";
+                    stage = "PO";
                     refreshScreen();
-                }else{
+                }else if(incorrectPin != 3){
                     incorrectPin += 1;
                     enteredPin = "";
                     refreshScreen();
+                }else{
+                    locked = true;
+                    stage = "CL";
+                    refreshScreen();
+                }
+                break;
+            case "PO":
+                stage = "A";
+                refreshScreen();
+                break;
+            case "WC":
+                if(money.equals("") || !money.endsWith("0") || money.endsWith("10") || money.endsWith("30")){
+                    if(language.equals("pl")){
+                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\tnie można wypłacić podanej kwoty");
+                    }else{
+//                        screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     couldn't withdraw given ammount");
+                    }
+                    money = "";
+                }else{
+                    withdrawAmount = Integer.parseInt(money);
+                    if(withdrawAmount > 1000){
+                        if(language.equals("pl")){
+                            screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\tkwota nie moźe przekraczać 1000 PLN");
+                        }else{
+//                            screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     can't withdraw more than 1000 PLN");
+                        }
+                        money = "";
+                    }else{
+                        if(withdrawAmount > balance){
+                            if(language.equals("pl")){
+                                screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                     brak środków na kącie");
+                            }else{
+//                                screen.setText("\n\t    \n                 (: 500, 200, 100, 50, 20)\n\t                     insufficient founds");
+                            }
+                        }else{
+                        banknotes = moneycount(withdrawAmount);
+                        stage = "CO";
+                        refreshScreen();
+                        }
+                    }    
                 }
                 break;
             case "NP":
                 if(enteredPin.length() == 4){
                     newPin = enteredPin;
                     enteredPin = "";
+                    stage = "CP";
                     refreshScreen();
                 }
                 break;
             case "CP":
                 if(enteredPin.equals(newPin)){
-                    stage = "A";
+                    pin = newPin;
+                    stage = "C";
                     refreshScreen();
                 }else{
-            
+                    enteredPin = "";
+                    screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\t           Piny się różnią\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
                 }
                 break;
         }
         enableButtons(true);
     }//GEN-LAST:event_EnterActionPerformed
 
-    private void moneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moneyActionPerformed
+    private void moneySlotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moneySlotActionPerformed
         enableButtons(false);
         if(stage.equals("MO")){
-            money.setBackground(new java.awt.Color(82, 80, 82));
+            moneySlot.setBackground(new java.awt.Color(82, 80, 82));
             balance -= withdrawAmount;
             withdrawAmount = 0;
+            cards[selectedcard][1] = pin;
+            cards[selectedcard][2] = balance + "";
+            cards[selectedcard][3] = locked + "";
             stage = "CI";
             refreshScreen();
         }
         enableButtons(true);
-    }//GEN-LAST:event_moneyActionPerformed
+    }//GEN-LAST:event_moneySlotActionPerformed
 
     private void zeroZeroZeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zeroZeroZeroActionPerformed
         if(stage.equals("WC")){
             if(language.equals("pl")){
-                switch(moneyOut.length()){
+                switch(money.length()){
                     case 1:
-                        moneyOut += "0000";
-                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                        money += "0000";
+                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                         break;
                     case 2:
-                        moneyOut += "000";
-                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+moneyOut+" PLN");
+                        money += "000";
+                        screen.setText("\n\t    Wprowadź kwotę do wypłaty\n                 (dostępne nominały: 500, 200, 100, 50, 20)\n\t                 "+money+" PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
                         break;
                 }
             }else{
-//                switch(moneyOut.length()){
+//                switch(money.length()){
 //                    case 1:
-//                        moneyOut += "0000";
-//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                        money += "0000";
+//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                        break;
 //                    case 2:
-//                        moneyOut += "000";
-//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+moneyOut+" PLN");
+//                        money += "000";
+//                        screen.setText("\n\t    \n\t                 (: 500, 200, 100, 50, 20)\n                 "+money+" PLN");
 //                        break;
 //                }
             }
         }
     }//GEN-LAST:event_zeroZeroZeroActionPerformed
+
+    private void card1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_card1ActionPerformed
+        if(stage.equals("CI") && cardIn == false){
+            selectedcard = 0;
+            cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
+            cardIn = true;
+            balance = Double.parseDouble(cards[0][2]);
+            pin = cards[0][1];
+            if (cards[0][3].equals("false")){
+                locked = false;
+            }else{
+                locked = true;
+            }
+            if (!locked){
+                stage = "L";
+            }else{
+                stage = "CL";
+            }
+            refreshScreen();
+            card1.setVisible(false);
+            card2.setVisible(false);
+            card3.setVisible(false);
+        }
+    }//GEN-LAST:event_card1ActionPerformed
+
+    private void card2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_card2ActionPerformed
+        if(stage.equals("CI") && cardIn == false){
+            selectedcard = 1;
+            cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
+            cardIn = true;
+            balance = Double.parseDouble(cards[1][2]);
+            pin = cards[1][1];
+            if (cards[1][3].equals("false")){
+                locked = false;
+            }else{
+                locked = true;
+            }
+            if (!locked){
+                stage = "L";
+            }else{
+                stage = "CL";
+            }
+            refreshScreen();
+            card1.setVisible(false);
+            card2.setVisible(false);
+            card3.setVisible(false);
+        }
+    }//GEN-LAST:event_card2ActionPerformed
+
+    private void card3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_card3ActionPerformed
+        if(stage.equals("CI") && cardIn == false){
+            selectedcard = 2;
+            cardIndicator.setBackground(new java.awt.Color(0, 96, 0));
+            cardIn = true;
+            balance = Double.parseDouble(cards[2][2]);
+            pin = cards[2][1];
+            if (cards[2][3].equals("false")){
+                locked = false;
+            }else{
+                locked = true;
+            }
+            if (!locked){
+                stage = "L";
+            }else{
+                stage = "CL";
+            }
+            refreshScreen();
+            card1.setVisible(false);
+            card2.setVisible(false);
+            card3.setVisible(false);
+        }
+    }//GEN-LAST:event_card3ActionPerformed
 
     private void refreshScreen(){
         switch(stage){
@@ -2676,7 +3236,7 @@ public class Bankomat extends javax.swing.JFrame {
                 break;
             case "WP":
                 if(language.equals("pl")){
-                    screen.setText("\n\t           Nieprawidłowy PIN\n\t           ");
+                    screen.setText("\n\t           Nieprawidłowy PIN\n\n\n\n\n\t                      ----\n\t           ");
                     switch(incorrectPin){
                         case 1:
                             screen.append("Pozostały 3 próby");
@@ -2687,26 +3247,36 @@ public class Bankomat extends javax.swing.JFrame {
                         case 3:
                             screen.append("Pozostała 1 próba");
                             break;
+                        case 4:
+                            locked = true;
+                            break;
                     }
                     screen.append("\n\t           Potwierdź: Akceptuj");
                 }else{
 //                    screen.setText("\n\t       Please enter your PIN\n\n\n\n\n\t                          \n\n\n\t               Confirm: Enter");
                 }
                 break;
+            case "PO":
+                if(language.equals("pl")){
+                    screen.setText("\n\n\n                    Nie możemy wydrukować potwierdzenia\n\n\t       czy chcesz kontynułować\n\n\t\t\t                  tak ->\n\n\n\t\t\t                  nie ->");
+                }else{
+//                    screen.setText("\n\t   Please take out your card");
+                }
+                break;
             case "A":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Wybierz rodzaj tranzakji\n\n\n<- wpłata\t\t\t           wypłata ->\n\n\n\t\t                      dostępne środki ->\n\n\n\t\t        zmiana numeru PIN karty ->");
+                    screen.setText("\n\t         Wybierz rodzaj tranzakji\n\n\n\t\t\t           wypłata ->\n\n\n\t\t                      dostępne środki ->\n\n\n\t\t        zmiana numeru PIN karty ->");
                 }else{
 //                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
                 break;
-            case "D":
-                if(language.equals("pl")){
-                    screen.setText("\n\t         Dostępne środki\n\n\n|||||||||1|||||||||1|||||||||1|||||||||1|||||||||1|||||||||1||||\n\n\n\t\t                      nowa transakcja ->\n\n\n\t\t        koniec transakcji ->");
-                }else{
-//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
-                }
-                break;
+//            case "DD":
+//                if(language.equals("pl")){
+//                    screen.setText("\n\t    Zadeklaruj kwotę wpłaty\n           (dostępne nominały: 500, 200, 100, 50, 20, 10)\n\t                     0 PLN\n\t\t\t       poprawna ->\n\n\n\t\t\t   niepoprawna ->");
+//                }else{
+////                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+//                }
+//                break;
             case "WS":
                 if(language.equals("pl")){
                     screen.setText("\n\t         Wybierz rządaną kwotę\n\n\n<- 20 PLN\t\t\t         200 PLN ->\n\n\n<- 50 PLN\t\t\t         500 PLN ->\n\n\n<- 100 PLN\t\t\t               inna ->");
@@ -2735,14 +3305,21 @@ public class Bankomat extends javax.swing.JFrame {
                 break;
             case "NP":
                 if(language.equals("pl")){
-                    screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                    screen.setText("\n\t              Wpisz nowy PIN\n\n\n\n\n\t                      ----\n\n\n\t           Potwierdź: Akceptuj");
                 }else{
 //                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
                 break;
             case "CP":
                 if(language.equals("pl")){
-                    screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                          \n\n\n\t           Potwierdź: Akceptuj");
+                    screen.setText("\n\t         Potwierdź nowy PIN\n\n\n\n\n\t                      ----\n\n\n\t           Potwierdź: Akceptuj");
+                }else{
+//                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
+                }
+                break;
+            case "C":
+                if(language.equals("pl")){
+                    screen.setText("\n\t         Pin został zmieniony\n\n\n\t\t                      nowa transakcja ->\n\n\n\t\t                      koniec transakcji ->");
                 }else{
 //                    screen.setText("\n\t       \n\n\n\t\t\t           \n\n\n\t\t                      \n\n\n\t\t");
                 }
@@ -2750,7 +3327,7 @@ public class Bankomat extends javax.swing.JFrame {
             case "CO":
                 cardIndicator.setBackground(new java.awt.Color(0, 164, 0));
                 if(language.equals("pl")){
-                    screen.setText("\n\n\n\n\t        Proszę zabrać kartę");
+                    screen.setText("\n\n\n\n\t           Proszę zabrać kartę");
                 }else{
 //                    screen.setText("\n\t   Please take out your card");
                 }
@@ -2764,14 +3341,13 @@ public class Bankomat extends javax.swing.JFrame {
                 }
                 break;
             case "MO":
-                money.setBackground(new java.awt.Color(74, 72, 74));
+                moneySlot.setBackground(new java.awt.Color(4, 2, 4));
                 if(language.equals("pl")){
                     screen.setText("\n\n\n\n\t        Proszę zabrać gotówkę\n\n\n                        "+banknotes[0]+"x500, "+banknotes[1]+"x200, "+banknotes[2]+"x100, "+banknotes[3]+"x50, "+banknotes[4]+"x20, ");
                 }else{  
 //                    screen.setText("\n\n\n\n\t Please take out your money");
                 }
                 break;
-            
         }
     }
     
@@ -2799,7 +3375,7 @@ public class Bankomat extends javax.swing.JFrame {
         Clear.setEnabled(state);
         Enter.setEnabled(state);
         zeroZeroZero.setEnabled(state);
-        money.setEnabled(state);
+        moneySlot.setEnabled(state);
         unknownSmall.setEnabled(state);
         unknownLarge.setEnabled(state);
     }
@@ -2872,16 +3448,27 @@ public class Bankomat extends javax.swing.JFrame {
     private javax.swing.JButton RMB;
     private javax.swing.JButton RMT;
     private javax.swing.JButton RT;
+    private javax.swing.JButton banknote10;
+    private javax.swing.JButton banknote100;
+    private javax.swing.JButton banknote20;
+    private javax.swing.JButton banknote200;
+    private javax.swing.JButton banknote50;
+    private javax.swing.JButton banknote500;
+    private javax.swing.JPanel banknoteSelect;
     private javax.swing.JPanel body;
+    private javax.swing.JButton card1;
+    private javax.swing.JButton card2;
+    private javax.swing.JButton card3;
     private javax.swing.JPanel cardIndicator;
     private javax.swing.JButton cardReader;
+    private javax.swing.JPanel cardSelect;
     private javax.swing.JButton eight;
     private javax.swing.JButton five;
     private javax.swing.JButton four;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton money;
     private javax.swing.JPanel moneyDeposit;
+    private javax.swing.JButton moneySlot;
     private javax.swing.JButton nine;
     private javax.swing.JPanel numberPad;
     private javax.swing.JButton one;
@@ -2897,3 +3484,4 @@ public class Bankomat extends javax.swing.JFrame {
     private javax.swing.JButton zeroZeroZero;
     // End of variables declaration//GEN-END:variables
 }
+
