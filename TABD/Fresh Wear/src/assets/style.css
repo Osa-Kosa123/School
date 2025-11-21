@@ -1,0 +1,15 @@
+#logo{
+    max-height: 100px;
+}
+header div div form div{
+    height: 50px;
+    width: 150px;
+}
+header div div form div input{
+    height: 50px;
+    width: 300px;
+}
+header div div form div button{
+    height: 50px;
+    width: 50px;
+}
