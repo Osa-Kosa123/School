@@ -1,15 +1,11 @@
 #logo{
-    max-height: 100px;
+    max-height: 75px;
 }
-header div div form div{
+#searchIcon{
     height: 50px;
-    width: 150px;
 }
-header div div form div input{
-    height: 50px;
-    width: 300px;
-}
-header div div form div button{
-    height: 50px;
-    width: 50px;
+header{
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
