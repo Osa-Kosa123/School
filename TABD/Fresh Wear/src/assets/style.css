@@ -1,11 +1,61 @@
+
+header{
+    display: flex;
+     justify-content: space-evenly  ;
+    /* align-items: center;     */
+    gap: 200px;
+}
+
 #logo{
     max-height: 75px;
 }
+input#search{
+    height: 50px;
+    width: 375px;
+}
+
 #searchIcon{
     height: 50px;
 }
-header{
-    display: flex;
-    align-items: center;
-    gap: 20px;
+
+main{
+    border: 1px solid #f1f1f1;
+    margin-inline: 5%;
+    margin-top: 5%;
+}
+
+label {
+    float: left;
+    width: 48px;
+    height: 32px;
+    position: relative;
+    cursor: pointer;
+}
+
+label input[type=radio] {
+    opacity: 0;
+}
+
+label img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    height: 32px;
+}
+
+:checked + img {
+    opacity: 1;
+}
+
+#viewForm, #sortForm{
+    float: left;
+}
+
+#pageForm{
+    float: right ;
+}
+
+#searchOptions::after{
+    clear: both;
 }

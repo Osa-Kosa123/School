@@ -43,7 +43,27 @@
         </div>
     </header>
     <main>
-        
+        <section id="searchOptions">
+            <form action="index.php" method="post" id="viewForm">
+                <label>
+                    <input type="radio" name="view" value="gridView">
+                    <img src="../src/assets/search.png">
+                </label>
+                <label>
+                    <input type="radio" name="view" value="listView">
+                    <img src="../src/assets/search.png">
+                </label>
+                </form>
+            <form action="index.php" method="post" id="sortForm">
+                <select name="sort" id="sortOption">
+					<option value="date" selected='selected'>Sortuj od najnowszych</option>
+					<option value="popularity" >Sortuj wg popularności</option>
+					<!-- <option value="rating" >Sortuj wg średniej oceny</option> -->
+					<option value="priceLow" >Sortuj po cenie od najniższej</option>
+					<option value="priceHigh" >Sortuj po cenie od najwyższej</option>
+                </select>   
+            </form>
+        </section>
     </main>
     <footer>
 
