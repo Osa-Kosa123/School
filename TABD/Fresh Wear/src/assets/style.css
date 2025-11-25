@@ -1,61 +1,102 @@
 
-header{
-    display: flex;
-     justify-content: space-evenly  ;
-    /* align-items: center;     */
-    gap: 200px;
+body{
+    margin: 0;
+    padding: 0;
 }
 
-#logo{
-    max-height: 75px;
-}
-input#search{
-    height: 50px;
-    width: 375px;
-}
+/* header */
+    header{
+        display: flex;
+         justify-content: space-evenly  ;
+        align-items: center;
+        gap: 200px;
+        background-color: #2E81C9;
+        padding: 1%
+    }
 
-#searchIcon{
-    height: 50px;
-}
+    #logo{
+        max-height: 75px;
+    }
 
-main{
-    border: 1px solid #f1f1f1;
-    margin-inline: 5%;
-    margin-top: 5%;
-}
+    /* search */
+        #searchField{
+            height: 50px;
+            width: 375px;
+            color: #1A4A73;
+            font-size: 16px;
+        }
 
-label {
-    float: left;
-    width: 48px;
-    height: 32px;
-    position: relative;
-    cursor: pointer;
-}
+        #searchButton{
+            background-color: #1A4A73;
+            border: none;
+        }
 
-label input[type=radio] {
-    opacity: 0;
-}
+        #searchIcon{
+            height: 50px;
+        }
+    /*  */
 
-label img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0.5;
-    height: 32px;
-}
+/*  */
 
-:checked + img {
-    opacity: 1;
-}
+/* main */
+    main{
+        border: 1px solid #DFC7A4;
+        margin-inline: 5%;
+        margin-top: 5%;
+        height: 200px;
+    }
 
-#viewForm, #sortForm{
-    float: left;
-}
+    /* view selection */
+        label {
+            float: left;
+            width: 48px;
+            height: 32px;
+            position: relative;
+            cursor: pointer;
+        }
 
-#pageForm{
-    float: right ;
-}
+        label input[type=radio] {
+            opacity: 0;
+        }
 
-#searchOptions::after{
-    clear: both;
-}
+        label img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 32px;
+            border: white 2px solid;
+        }
+
+        :checked + img {
+            opacity: 1;
+            border: #2E81C9 2px solid;
+        }
+    /*  */
+
+    #viewForm, #sortForm{
+        float: left;
+    }
+
+    #pageForm{
+        float: right ;
+    }
+
+    #searchOptions::after{
+        clear: both;
+    }
+
+    #products{
+        width: 80%;
+        border-top: 1px solid #DFC7A4;
+        margin-top: 50px;
+    }
+/*  */
+
+/* footer */
+    footer{
+        background-color: #1A4A73;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+/*  */
