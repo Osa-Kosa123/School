@@ -1,0 +1,29 @@
+/* main */
+    main{
+        background: #ccc;
+        margin-inline: auto;
+        margin-top: 5%;
+        height: 200px;
+        min-width: 392px;
+        width: 20%;
+        /* text-align: center; */
+        padding: 20px;
+        align-items: center;
+    }
+
+    #login{
+        background-color: #fff;
+
+    }
+
+    #login label{
+        margin: 8px;
+        margin-top: 10px;
+    }
+
+    #login input{
+        width: 98%;
+        align-self: center;
+        margin-bottom: 10px;
+    }
+/*  */
