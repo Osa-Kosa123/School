@@ -1,5 +1,5 @@
         <div id="logoBox">
-            <img src="../assets/logo.png" alt="logo" id="logo">
+            <img src="../assets/logo.png" alt="logo strony" id="logo">
         </div>
         <div id="searchBox">
             <form action="search.php" method="post" id="searchForm">
@@ -10,5 +10,14 @@
             </form>
         </div>
         <div id="buttonBox">
-            <button id="cart"></button>
+            <button id="cartButton">
+                <a href="">
+                    <img src="../assets/cart.png" alt="cart icon" id="cartIcon">
+                </a>
+            </button>
+            <div id="userOptions">
+                <a href="login.php">Zalogój się</a>
+                <a href="account.php">Zarządzaj kontem</a>
+                <a href="logout.php">Wylogój</a>
+            </div>
         </div>

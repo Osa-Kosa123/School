@@ -17,12 +17,12 @@
         color: #1A4A73;
     }
 
-    #login label{
+    #register label{
         margin: 8px;
         margin-top: 10px;
     }
 
-    #login input{
+    #register input{
         width: 98%;
         align-self: center;
         margin-bottom: 10px;
@@ -31,7 +31,7 @@
 
     #links{
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
     }
 
     #submitBox{

@@ -33,16 +33,29 @@
         }
     /*  */
 
-    #viewForm, #sortForm{
+    #searchOptions{
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    #sortOption{
+        background-color: #F9F2E2;
+        border: none;
+        padding: 9px 1em 9px 9px;
+        margin: 0;
+        width: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        cursor: inherit;
+        line-height: inherit;
+    }
+
+    #viewForm{
         float: left;
     }
 
-    #pageForm{
-        float: right ;
-    }
-
-    #searchOptions::after{
-        clear: both;
+    #sortForm{
+        float: left;
     }
 
     #products{
