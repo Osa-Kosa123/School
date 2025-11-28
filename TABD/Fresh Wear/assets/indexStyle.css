@@ -1,0 +1,61 @@
+/* main */
+    main{
+        border: 1px solid #DFC7A4;
+        margin-inline: 5%;
+        margin-top: 5%;
+        height: 200px;
+    }
+
+    /* view selection */
+        label {
+            float: left;
+            width: 48px;
+            height: 32px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        label input[type=radio] {
+            opacity: 0;
+        }
+
+        label img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 32px;
+            border: white 2px solid;
+        }
+
+        :checked + img {
+            opacity: 1;
+            border: #2E81C9 2px solid;
+        }
+    /*  */
+
+    #searchOptions{
+        display: flex;
+        justify-content: space-between;
+        margin: 10px;
+    }
+    
+    #sortOption{
+        background-color: #F9F2E2;
+        border: none;
+        padding: 9px 1em 9px 9px;
+        margin: 0;
+        width: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        cursor: inherit;
+        line-height: inherit;
+    }
+
+    #viewForm, #sortForm {
+        float: left;
+    }
+    
+    #products {
+    border-top: 1px solid #DFC7A4;
+}
+/*  */

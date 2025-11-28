@@ -1,0 +1,53 @@
+/* main */
+    main{
+        background: #DFC7A4;
+        margin-inline: auto;
+        margin-top: 5%;
+        min-width: 392px;
+        width: 20%;
+        /* text-align: center; */
+        padding: 20px;
+        align-items: center;
+    }
+
+    main h2{
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom: 20px;
+        color: #1A4A73;
+    }
+
+    #login label{
+        margin: 8px;
+        margin-top: 10px;
+    }
+
+    #login input{
+        width: 98%;
+        align-self: center;
+        margin-bottom: 10px;
+        background-color: #F9F2E2;
+    }
+
+    #links{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #submitBox{
+        text-align: center;
+    }
+
+    #submitBox *{
+        background-color: #D4EBFF;
+        border: none;
+        color: #1A4A73;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+/*  */
