@@ -1,8 +1,10 @@
         <div id="logoBox">
-            <img src="../assets/logo.png" alt="logo strony" id="logo">
+            <a href="index.php">
+                <img src="../assets/logo.png" alt="logo strony" id="logo">
+            </a>
         </div>
         <div id="searchBox">
-            <form action="search.php" method="post" id="searchForm">
+            <form action="index.php" method="post" id="searchForm">
                 <input type="text" name="search" id="searchField" placeholder="Szukaj produktów...">
                 <button type="submit" id="searchButton">
                     <img src="../assets/search.png" alt="search icon" id="searchIcon">
@@ -11,13 +13,18 @@
         </div>
         <div id="buttonBox">
             <button id="cartButton">
-                <a href="">
+                <a href="cart.php">
                     <img src="../assets/cart.png" alt="cart icon" id="cartIcon">
                 </a>
             </button>
-            <div id="userOptions">
-                <a href="login.php">Zalogój się</a>
-                <a href="account.php">Zarządzaj kontem</a>
-                <a href="logout.php">Wylogój</a>
-            </div>
+            <!--<div id="userBox">-->
+                <div id="userButton">
+                    <p>Konto</p>
+                <div id="userOptions">
+                    <a href="login.php">Zalogój się</a>
+                    <a href="account.php">Zarządzaj kontem</a>
+                    <a href="logout.php">Wylogój</a>
+                </div>
+                </div>
+            <!--</div>-->
         </div>
