@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fresh Wear</title>
-    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="shortcut icon" href="../../public/favicon.png" type="image/png">
     <link rel="stylesheet" href="../assets/headerStyle.css">
-    <link rel="stylesheet" href="../assets/indexStyle.css">
+    <link rel="stylesheet" href="../assets/cartStyle.css">
     <link rel="stylesheet" href="../assets/footerStyle.css">
 </head>
 <body>

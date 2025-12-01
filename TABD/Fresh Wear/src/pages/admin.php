@@ -6,7 +6,7 @@
     <title>Fresh Wear</title>
     <link rel="shortcut icon" href="../../public/favicon.png" type="image/png">
     <link rel="stylesheet" href="../assets/headerStyle.css">
-    <link rel="stylesheet" href="../assets/itemStyle.css">
+    <link rel="stylesheet" href="../assets/adminStyle.css">
     <link rel="stylesheet" href="../assets/footerStyle.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
         ?>
     </header>
     <main>
-
+        
     </main>
     <footer>
         <?php
