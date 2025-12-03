@@ -9,11 +9,11 @@
 /* header */
     header{
         display: flex;
-         justify-content: space-evenly  ;
+        justify-content: space-evenly  ;
         align-items: center;
         gap: 20px;
         background-color: #2E81C9;
-        padding: 1%
+        padding: 18px;
     }
 
     #logo{

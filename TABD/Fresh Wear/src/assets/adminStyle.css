@@ -1,0 +1,30 @@
+aside{
+    background: #DFC7A4;
+    margin-inline: 2%;
+    margin-top: 48px;
+    width: 10%;
+    min-width: 100px;
+}
+
+aside input{
+    background-color: #DFC7A4;
+    border: none;
+    text-align: center;
+    padding: 0;
+    margin-inline: 5px;
+    width: 95%;
+    height: 32px;
+    cursor: pointer;
+}
+
+#items{
+    margin-top: 5px;
+}
+
+#users{
+    margin-bottom: 5px;
+}
+
+aside input:hover{
+    background-color: #F9F2E2;
+}
