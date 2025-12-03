@@ -16,6 +16,13 @@
         ?>
     </header>
     <main>
+        <aside>
+            <form action="admin.php" method="post">
+                <input type="button" value="items" id="items">
+                <input type="button" value="discounts" id="discounts">
+                <input type="button" value="users" id="users">
+            </form>
+        </aside>
         
     </main>
     <footer>

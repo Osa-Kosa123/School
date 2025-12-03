@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="../assets/footerStyle.css">
 </head>
 <body>
+    <?php
+        require '../utils/connect.php';
+    ?>
     <header>
         <?php
             require '../components/header.php';
@@ -31,7 +34,7 @@
                 <form action="index.php" method="post" id="sortForm">
                     <select name="sort" id="sortOption">
     					<option value="date" selected='selected'>Sortuj od najnowszych</option>
-    					<option value="popularity" >Sortuj wg popularności</option>
+    					<!-- <option value="popularity" >Sortuj wg popularności</option> -->
     					<option value="priceLow" >Sortuj po cenie od najniższej</option>
     					<option value="priceHigh" >Sortuj po cenie od najwyższej</option>
                     </select>
@@ -43,7 +46,24 @@
             </div>
         </section>
         <section id="products">
-
+            <?php
+                // require '../components/items.php';
+                if(isset($_POST['searchField'])){
+                    $items = mysqli_query($db, "SELECT * FROM items WHERE `Name` LIKE '%".$_POST['searchField']."%' OR `Description` LIKE '%".$_POST['searchField']."%'");
+                } else {
+                    $items = mysqli_query($db, "SELECT * FROM items");
+                }
+                while($item = mysqli_fetch_assoc($items)) {
+                    // require '../components/itemBox.php';
+                    echo '<div class="itemBox">
+                            <a href="item.php?id='.$item['ID'].'">
+                                <img src="../assets/items/'.$item['Image'].'" alt="product image" class="itemImage">
+                                <div class="itemInfo">
+                                    <h3 class="itemName">'.$item['Name'].'</h3>
+                                    <p class="itemPrice">'.$item['Price'].' PLN</p>
+                                </div>';
+                }
+            ?>
         </section>
     </main>
     <footer>
@@ -51,5 +71,8 @@
             require '../components/footer.php';
         ?>
     </footer>
+    <?php
+        require '../utils/close.php';
+    ?>
 </body>
 </html>
