@@ -1,3 +1,6 @@
+<?php
+    require '../utils/connect.php';
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -25,3 +28,6 @@
     </footer>
 </body>
 </html>
+<?php
+    require '../utils/close.php';
+?>

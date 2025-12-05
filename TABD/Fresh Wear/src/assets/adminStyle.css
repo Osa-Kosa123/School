@@ -6,25 +6,18 @@ aside{
     min-width: 100px;
 }
 
-aside input{
+a button{
     background-color: #DFC7A4;
     border: none;
     text-align: center;
     padding: 0;
     margin-inline: 5px;
-    width: 95%;
+    width: 130px;
     height: 32px;
     cursor: pointer;
+    text-size-adjust: 100%;
 }
 
-#items{
-    margin-top: 5px;
-}
-
-#users{
-    margin-bottom: 5px;
-}
-
-aside input:hover{
+a button:hover{
     background-color: #F9F2E2;
 }
