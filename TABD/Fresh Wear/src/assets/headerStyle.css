@@ -33,9 +33,10 @@
             color: #1A4A73;
             font-size: 16px;
             border: none;
+            border-radius: 16px 0px 0px 16px;
             padding: 0 10px;
         }
-
+        
         #searchButton, #cartButton, #userButton{
             background-color: #1A4A73;
             border: none;
@@ -44,6 +45,11 @@
             min-width: 75px;
             height: 75px;
             cursor: pointer;
+            border-radius: 16px;
+        }
+
+        #searchButton{
+            border-radius: 0px 16px 16px 0px;
         }
 
         #cartButton a{
@@ -63,6 +69,10 @@
             gap: 20px;
     }
 
+    #userButton:hover{
+        border-radius: 16px 16px 0px 0px;
+    }
+
     #userButton p {
         font-size: 200%;
         color: #D4EBFF;
@@ -78,6 +88,7 @@
         min-width: 160px;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
+        border-radius: 0px 16px 16px 16px;
     }
 
     #userOptions a {
@@ -86,6 +97,14 @@
         text-decoration: none;
         display: block;
         text-align: left;
+    }
+
+    #top {
+        border-radius: 0px 16px 0px 0px;
+    }
+
+    #bottom {
+        border-radius: 0px 0px 16px 16px;
     }
 
     #userOptions a:hover {

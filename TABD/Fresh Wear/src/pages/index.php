@@ -1,3 +1,6 @@
+<?php
+    require '../utils/connect.php';
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -10,9 +13,6 @@
     <link rel="stylesheet" href="../assets/footerStyle.css">
 </head>
 <body>
-    <?php
-        require '../utils/connect.php';
-    ?>
     <header>
         <?php
             require '../components/header.php';
@@ -56,7 +56,7 @@
                 while($item = mysqli_fetch_assoc($items)) {
                     // require '../components/itemBox.php';
                     echo '<div class="itemBox">
-                            <a href="item.php?id='.$item['ID'].'">
+                            <a href="item.php?id='.$item['Id'].'">
                                 <img src="../assets/items/'.$item['Image'].'" alt="product image" class="itemImage">
                                 <div class="itemInfo">
                                     <h3 class="itemName">'.$item['Name'].'</h3>
@@ -71,8 +71,8 @@
             require '../components/footer.php';
         ?>
     </footer>
-    <?php
-        require '../utils/close.php';
-    ?>
 </body>
 </html>
+<?php
+    require '../utils/close.php';
+?>

@@ -17,14 +17,23 @@
                     <img src="../assets/cart.png" alt="cart icon" id="cartIcon">
                 </a>
             </button>
-            <!--<div id="userBox">-->
                 <div id="userButton">
                     <p>Konto</p>
                 <div id="userOptions">
-                    <a href="login.php">Zalogój się</a>
-                    <a href="account.php">Zarządzaj kontem</a>
-                    <a href="logout.php">Wylogój</a>
+                    <?php
+                        $users = mysqli_query($db, "SELECT * FROM users WHERE `Email` = '".$_COOKIE['user']."'");
+                        $user = mysqli_fetch_assoc($users);
+                        if(strpos($user['Email'], "@")){
+                            echo "<a href='account.php' id='top'>Zarządzaj kontem</a>";
+                            if($user['Role'] == "a"){
+                                echo "<a href='admin-items.php'>Panel administracyjny</a>";
+                            }
+                            echo "<a href='logout.php' id='bottom'>Wylogój</a>";
+                        }else{
+                            echo "<a href='login.php' id='top'>Zalogój się</a>";
+                            echo "<a href='register.php' id='bottom'>Zarejestrój się</a>";
+                        }
+                    ?>
                 </div>
                 </div>
-            <!--</div>-->
         </div>
