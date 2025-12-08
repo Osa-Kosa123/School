@@ -79,6 +79,7 @@
                             echo "\t    document.getElementById('error').innerHTML = 'Podano nieprawidłowe hasło';\n";
                             echo "\t</script>\n";
                         } else {
+                            mysqli_query($db, "DELETE FROM `users` WHERE `Email` = '".$_COOKIE['user']."'");
                             setcookie('user', $_POST['email'], 9999999999, "/");
                             header('Location: index.php');
                         }

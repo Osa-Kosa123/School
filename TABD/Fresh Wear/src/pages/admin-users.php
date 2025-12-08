@@ -28,7 +28,7 @@
     <main>
         <aside>
             <div class="dropright">
-                <a href="admin-items.php" class="root"  id="selected">Produkty</a>
+                <a href="admin-items.php" class="root">Produkty</a>
                 <div class="dropright-content">
                     <a href="admin-items.php" class="branch">Produkty</a>
                     <a href="admin-item-new.php" class="branch">Nowy produkt</a> 
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="dropright">
-                <a href="admin-items.php" class="root">Urzytkownicy</a>
+                <a href="admin-items.php" class="root" id="selected">Urzytkownicy</a>
             </div>
         </aside>
         <article>

@@ -1,6 +1,7 @@
 /* main */
     main{
         border: 1px solid #DFC7A4;
+        border-radius: 8px;
         margin-inline: 5%;
         margin-top: 5%;
         height: 200px;
@@ -40,9 +41,10 @@
         margin-left: 10px;
     }
     
-    #sortOption{
+    #sortOption, #categoryOption{
         background-color: #F9F2E2;
         border: none;
+        border-radius: 8px;
         padding: 9px 1em 9px 9px;
         margin: 0;
         width: 100%;
@@ -58,6 +60,8 @@
 
     #sortForm{
         float: left;
+        display: flex;
+        gap: 20px;
     }
 
     #products{

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" id="fileInput" accept="image/*" multiple/>
+    <button onclick="uploadFiles()">Upload</button>
+    <div id="message"></div>
+  </body>
+  <script>
+function uploadFiles() {
+  const input = document.getElementById('fileInput');
+  const files = input.files;
+
+  if (!files.length) {
+    displayMessage('No files selected.', 'red');
+    return;
+  }
+
+  const formData = new FormData();
+  for (let file of files) {
+    formData.append('upload[]', file);
+  }
+
+  // CSRF token simulation
+  formData.append('csrf_token', generateToken());
+
+  fetch('upload.php', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'success') {
+      displayMessage('Upload successful!', 'green');
+    } else {
+      displayMessage(data.error || 'Upload failed.', 'red');
+    }
+  })
+  .catch(() => displayMessage('Upload error occurred.', 'red'));
+}
+
+function displayMessage(msg, color) {
+  const box = document.getElementById('message');
+  box.innerText = msg;
+  box.style.color = color;
+}
+
+function generateToken() {
+  return Math.random().toString(36).slice(2);
+}
+</script>
+</html>
