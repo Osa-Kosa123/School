@@ -1,6 +1,5 @@
 <?php
     $db = mysqli_connect("localhost", "root", "", "shop");
-    // // setcookie('db', $db, 9999999999, "/");
 
     function generateUserTag($db) {
         $userTag = bin2hex(random_bytes(rand(8, 16) / 2));

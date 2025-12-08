@@ -1,23 +1,96 @@
 aside{
-    background: #DFC7A4;
-    margin-inline: 2%;
-    margin-top: 48px;
-    width: 10%;
-    min-width: 100px;
+  background: #DFC7A4;
+  min-width: 130px;
+  width: 10%;
+  text-align: center;
 }
 
-a button{
-    background-color: #DFC7A4;
-    border: none;
-    text-align: center;
-    padding: 0;
-    margin-inline: 5px;
-    width: 130px;
-    height: 32px;
-    cursor: pointer;
-    text-size-adjust: 100%;
+article{
+  background-color: #F9F2E2;
+  max-width: 82%;
+  min-width: 70%;
 }
 
-a button:hover{
-    background-color: #F9F2E2;
+article form{
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 16px;
+}
+
+article img{
+  width: 100%;
+}
+
+.branch{
+  background-color: #F9F2E2;
+  width: 100%;
+}
+
+.branch:hover{
+  background-color: #DFC7A4;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.dropright {
+  background-color: #DFC7A4;
+  display: inline-block;
+  position: relative;
+  width: 192px;
+}
+
+.dropright a {
+  color: black;
+  display: block;
+  padding: 12px 0px;
+  text-decoration: none;
+}
+
+.dropright-content {
+  background-color: #f1f1f1;
+  display: none;
+  left: 192px;
+  min-width: 160px;
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+}
+
+.dropright:hover .dropright-content {
+  display: block;
+}
+
+#imagebox{
+  max-width: 20%;
+}
+
+main{
+  display: flex;
+  gap: 4%;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.root{
+  background-color: #DFC7A4;
+  border: none;
+  cursor: pointer;
+  min-width: 130px;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  width:100%;
+}
+
+.root:hover{
+  background-color: #F9F2E2;
+  width: 100%;
+}
+
+
+#selected{
+  background-color: #F9F2E2;
 }

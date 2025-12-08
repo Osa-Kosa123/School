@@ -34,9 +34,11 @@
                 <form action="index.php" method="post" id="sortForm">
                     <select name="sort" id="sortOption">
     					<option value="date" selected='selected'>Sortuj od najnowszych</option>
-    					<!-- <option value="popularity" >Sortuj wg popularności</option> -->
     					<option value="priceLow" >Sortuj po cenie od najniższej</option>
     					<option value="priceHigh" >Sortuj po cenie od najwyższej</option>
+                    </select>
+                    <select name="category" id="categoryOption">
+    					
                     </select>
                 </form>
             </div>

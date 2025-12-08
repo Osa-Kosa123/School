@@ -89,6 +89,7 @@
                         $username = explode('@', $_POST['email'])[0];
                         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
                         mysqli_query($db, "INSERT INTO users (`Username`, `Email`, `Password`, `Role`) VALUES ('$username', '".$_POST['email']."', '$password', 'u')");
+                        mysqli_query($db, "DELETE FROM `users` WHERE `Email` = '".$_COOKIE['user']."'");
                         setcookie('user', $_POST['email'], 9999999999, "/");
                         header('Location: index.php');
                     }
