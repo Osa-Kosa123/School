@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="dropright">
-                <a href="admin-items.php" class="root">Urzytkownicy</a>
+                <a href="admin-users.php" class="root">Urzytkownicy</a>
             </div>
         </aside>
         <article>

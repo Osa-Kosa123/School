@@ -4,7 +4,16 @@
         border-radius: 8px;
         margin-inline: 5%;
         margin-top: 5%;
-        height: 200px;
+    }
+
+    .itemBox{
+        margin: 10px;
+        text-align: center;
+        width: 16%;
+    }
+
+    .itemBox img{
+        max-height: 200px;
     }
 
     /* view selection */
@@ -67,7 +76,9 @@
     #products{
         width: 96%;
         margin-inline: 2%;
-        border-top: 1px solid #DFC7A4;
+        /* border-top: 1px solid #DFC7A4; */
         margin-top: 10px;
+        display: flex;
+        gap: 5%;
     }
 /*  */

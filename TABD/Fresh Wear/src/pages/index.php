@@ -19,7 +19,7 @@
         ?>
     </header>
     <main>
-        <section id="searchOptions">
+        <!-- <section id="searchOptions">
             <div id="left">
                 <form action="index.php" method="post" id="viewForm">
                     <label>
@@ -46,24 +46,29 @@
                 <form action="index.php" method="post" id="pageForm">
                 </form>
             </div>
-        </section>
+        </section> -->
         <section id="products">
             <?php
                 // require '../components/items.php';
-                if(isset($_POST['searchField'])){
-                    $items = mysqli_query($db, "SELECT * FROM items WHERE `Name` LIKE '%".$_POST['searchField']."%' OR `Description` LIKE '%".$_POST['searchField']."%'");
+                if(isset($_POST['search'])){
+                    $items = mysqli_query($db, "SELECT i.Id, i.Name, CAST((i.Price * (100-i.Discount) / 100) AS DOUBLE(16, 2)) AS ThePrice, `i-i`.Image_Name FROM items i INNER JOIN item_image `i-i` on i.Id = `i-i`.Item_Id WHERE i.Name LIKE '%".$_POST['search']."%' OR i.Description LIKE '%".$_POST['search']."%'");
                 } else {
-                    $items = mysqli_query($db, "SELECT * FROM items");
+                    $items = mysqli_query($db, "SELECT i.Id, i.Name, CAST((i.Price * (100-i.Discount) / 100) AS DOUBLE(16, 2)) AS ThePrice, `i-i`.Image_Name FROM items i INNER JOIN item_image `i-i` on i.Id = `i-i`.Item_Id");
+                }
+                if(mysqli_num_rows($items) == 0){
+                    echo "<h2 id='noResults'>Brak wyników wyszukiwania</h2>";
                 }
                 while($item = mysqli_fetch_assoc($items)) {
                     // require '../components/itemBox.php';
-                    echo '<div class="itemBox">
-                            <a href="item.php?id='.$item['Id'].'">
-                                <img src="../assets/items/'.$item['Image'].'" alt="product image" class="itemImage">
-                                <div class="itemInfo">
-                                    <h3 class="itemName">'.$item['Name'].'</h3>
-                                    <p class="itemPrice">'.$item['Price'].' PLN</p>
-                                </div>';
+                    echo "<div class='itemBox'>";
+                    echo "    <a href='item.php?id=".$item['Id']."'>";
+                    echo "        <img src='../assets/items/".$item['Image_Name']."' alt='product image' class='itemImage'>";
+                    echo "        <div class='itemInfo'>";
+                    echo "            <h3 class='itemName'>".$item['Name']."</h3>";
+                    echo "            <p class='itemPrice'>".$item['ThePrice']." PLN</p>";
+                    echo "        </div>";
+                    echo "    </a>";
+                    echo "</div>";
                 }
             ?>
         </section>
