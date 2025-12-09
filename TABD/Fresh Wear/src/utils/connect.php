@@ -1,5 +1,5 @@
 <?php
-    $db = mysqli_connect("localhost", "root", "", "shop");
+    $db = mysqli_connect("mysql2.small.pl", "m2364_OsaKosa123", "Osmall300", "shop");
 
     function generateUserTag($db) {
         $userTag = bin2hex(random_bytes(rand(8, 16) / 2));

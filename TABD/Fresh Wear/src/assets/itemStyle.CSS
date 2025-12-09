@@ -1,0 +1,41 @@
+#categories{
+    font-size: 75%;
+}
+
+hr{
+    background-color: #89B3D9;
+    border-width:0;
+    height:1px;
+}
+
+#imagelist{
+    display: flex;
+    width: 20%;
+}
+
+#imageBox{
+    display: flex;
+    gap: 10px;
+    width: 50%;
+}
+
+#itemImage, .thumbnail{
+    width: 100%;
+}
+
+#price{
+    font-size: 200%;
+    margin-bottom: 18px;
+    margin-top: 18px;
+}
+
+.thumbnail{
+    height: 103px;
+}
+
+main{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 50px;
+}
